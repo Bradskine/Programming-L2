@@ -3,42 +3,52 @@
 <body>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <script>
-        var canvas, canvasContext;
+        var canvas, ctx;
 
         window.onload = function() {
             canvas = document.getElementById('gameCanvas');
-            canvasContext = canvas.getContext('2d');
+            ctx = canvas.getContext('2d');
 
             setInterval(mainloop, 1000 / 50);
-            
+
             document.addEventListener('keydown', keyPressed); // checks for the keys.
             document.addEventListener('keyup', keyReleased);
-            
+
         }
 
-        
-        
+
+
         // paddle variables and constants
-        
-        
-        var paddleXpos= 0;
+
+        var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 80; 
+        const PADDLE_WIDTH = 80;
         const PADDLE_HEIGHT = 20;
-        var paddleXspeed = 5;
+        var paddleXspeed = 10;
         var paddleYspeed = 5;
         var paddleColor = 'green';
         var paddleStart = false;
-        var paddleXspeed = 10;
-       
-        
+
+        //ball variables
+
+        var ballXpos = 0;
+        var ballYpos = 0;
+        var ballDiameter = 30;
+        var ballXspeed = 0;
+        var a = 0;
+        var b = 2 * Math.PI;
+        var ballYspeed = 0;
+        var ballColor = 'red';
+        var ballActive = false;
+
+
         //for arrow and wasd keys 
         const WKEY = 87;
         const AKEY = 65;
         const SKEY = 83;
-        const DKEY = 68; 
+        const DKEY = 68;
         const LEFT_KEY = 37;
-        const TOP_KEY = 38;     
+        const TOP_KEY = 38;
         const RIGHT_KEY = 39;
         const BOT_KEY = 40;
         var upKeyPressed = false;
@@ -46,95 +56,259 @@
         var leftKeyPressed = false;
         var downKeyPressed = false;
 
+
+        //images 
+
+
+        var ball = new Image();
+        var brickImg = new Image();
+        ball.src = 'Img/ball.png';
+        brickImg.src = 'Img/brick.png';
+
+
+
+        //bricks variables
+        var bricks = [];
+        var brickCount = 0;
+        var brickMaxCount = 10;
+        var brickWidth = 50;
+        var brickHeight = 50;
+        var brickXpos = 0;
+        var brickYpos = 0;
+        var brickGap = 10;
+        var rowCount = 2;
+        var columnCount = 5;
+
+
+
+
+        // general game variables
+        var score = 0;
+        var lifes = 3;
+        var level = 1;
+        var gameActive = false;
+
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            
-            if(paddleStart == false) {
-                paddleXpos = canvas.width/2-PADDLE_WIDTH/2;
-                paddleYpos=canvas.height * 0.87;
+
+            if (paddleStart == false) {
+                paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
+                paddleYpos = canvas.height * 0.82;
                 paddleStart = true;
             }
-            drawPaddle();
+            drawPaddle(); //funciotns to create draw and make paddle move
             paddleMove();
-            
+
+
+            if (ballActive == false) {
+                ballXpos = 200;
+                ballYpos = 200;
+                ballYspeed = 3;
+                ballXspeed = Math.floor(Math.random() * (12 - 7) + 7);
+                ballActive = true;
+            }
+
+            drawScore();
+            drawBall();
+            ballMove();
+            drawBricks();
+
+
         }
 
+
+        function drawBricks() { //to draw the brikcs
+            
+            if(brickCount<=brickMaxCount) { // draws the right amount of bricks for the level
+                bricks.push(addBrick());
+            }
+            
+            bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
+                drawImg(brickImg, brick.brickXpos,brick.brickYpos,brick.brickWidth,brick.brickHeight); 
+               
+            });
+
+
+
+        }
+
+        function addBrick() {    
+               
+            
+                  
+            
+               if (brickCount<=5) {
+                   brickYpos = 20;
+                   brickXpos= (canvas.width*0.2) * brickCount;
+               }   else {
+                   brickYpos = 20 + brickGap + brickHeight*(rowCount-1);
+                   brickXpos = (canvas.width*0.2) * (brickCount-6);
+               }
+            
+                brickWidth = canvas.width/columnCount - brickGap;
+                brickHeight = 30;
+            
+            
+            var newBrick = {
+                brickXpos: brickXpos,
+                brickYpos: brickYpos,
+                brickWidth: brickWidth,
+                brickHeight: brickHeight
+            }
+            brickCount += 1;
+            return newBrick;
+
+        }
+
+        function drawScore() {
+            ctx.font = "30px Times New Roman";
+            ctx.fillStyle = "red";
+            ctx.fillText("Score: " + score, 15, 30);
+            ctx.fillText("lifes: " + lifes, canvas.width / 3, 30);
+            ctx.fillText("lifes: " + lifes, canvas.width / 3, 30);
+            if (gameActive == true) {
+                score += 1;
+            }
+
+
+        }
+
+
+        function drawImg(src, x, y, w, h) { //to draw images source,xpos , ypos, height
+            ctx.drawImage(src, x, y, w, h);
+        }
+
+        function drawCircle(x, y, d, a, b, c) {
+
+
+            ctx.beginPath();
+
+            ctx.fillStyle = c;
+            ctx.arc(x, y, d, a, b);
+            ctx.closePath();
+            ctx.fill();
+
+        }
+
+
+
         function colorRect(x, y, w, h, c) { //to draw things
-            canvasContext.fillStyle = c;
-            canvasContext.fillRect(x, y, w, h);
+            ctx.fillStyle = c;
+            ctx.fillRect(x, y, w, h);
         }
-     
+
+        function ballMove() { //makes the ball move
+
+            ballXpos += ballXspeed;
+            ballYpos += ballYspeed;
+
+
+            if (ballXpos + ballDiameter >= canvas.width) {
+                ballXspeed *= -1;
+            }
+
+            if (ballXpos <= 0) {
+                ballXspeed *= -1;
+            }
+
+            if (ballYpos + ballDiameter >= canvas.width) {
+                ballYspeed *= -1;
+            }
+
+            if (ballYpos <= 0) {
+                ballYspeed *= -1;
+            }
+
+            if (ballYpos + ballDiameter > paddleYpos &&
+                ballYpos < paddleYpos + PADDLE_HEIGHT &&
+                ballXpos + ballDiameter > paddleXpos &&
+                ballXpos < paddleXpos + PADDLE_WIDTH) {
+                if (ballYspeed > 0) {
+                    ballYspeed *= -1;
+
+                }
+
+
+            }
+
+        }
+
+
+        function drawBall() { //draws the ball
+            drawImg(ball, ballXpos, ballYpos, ballDiameter, ballDiameter);
+
+            //            drawCircle(ballXpos,ballYpos,ballDiameter,a,b,ballColor);
+
+
+        }
+
+
+
+
         function drawPaddle() { //draws the paddle based on variables that can be changed and are set at start
-           colorRect(paddleXpos,paddleYpos,PADDLE_WIDTH,PADDLE_HEIGHT,paddleColor); 
+            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, paddleColor);
         }
-        
+
         function paddleMove() {
-      
-            
-            if(paddleXpos>canvas.width*0.05) {
-            if(leftKeyPressed == true) {
-                paddleXpos -= paddleXspeed; 
-                      console.log('hello');
+
+
+            if (paddleXpos > canvas.width * 0.05) {
+                if (leftKeyPressed == true) {
+                    paddleXpos -= paddleXspeed;
+                    console.log('hello');
+                }
             }
-            }
-       
-            
-            
-            if(paddleXpos + PADDLE_WIDTH< canvas.width*0.95) {
-            if(rightKeyPressed == true) {
-                paddleXpos += paddleXspeed; 
+
+
+
+            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
+                if (rightKeyPressed == true) {
+                    paddleXpos += paddleXspeed;
+                }
             }
         }
-        } 
-        
-         function keyReleased(evt) {   // to check if keys are not pressed
-            if(evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
+
+        function keyReleased(evt) { // to check if keys are not pressed
+            if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
                 upKeyPressed = false;
             }
-            
-            if(evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
-                leftKeyPressed = false;  
+
+            if (evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
+                leftKeyPressed = false;
             }
-            
-             if(evt.keyCode == SKEY || evt.keyCode == BOT_KEY) {
+
+            if (evt.keyCode == SKEY || evt.keyCode == BOT_KEY) {
                 downKeyPressed = false;
             }
-            
-            if(evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = false;  
+
+            if (evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = false;
             }
-            
-            
+
+
         }
-        
-         function keyPressed(evt) {   // to check if keys are pressed
-            if(evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
+
+        function keyPressed(evt) { // to check if keys are pressed
+            if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
                 upKeyPressed = true;
             }
-            
-            if(evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
+
+            if (evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
                 leftKeyPressed = true;
-                
+
             }
-            
-             if(evt.keyCode == SKEY || evt.keyCode == TOP_KEY) {
+
+            if (evt.keyCode == SKEY || evt.keyCode == TOP_KEY) {
                 downKeyPressed = true;
             }
-            
-            if(evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = true;  
+
+            if (evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = true;
             }
-            
-            
+
+
         }
-        
-        
-        
-        
-        
-        
-        
-           
+
     </script>
 </body>
 
@@ -146,6 +320,7 @@
 
 <html>
 
+<!--
 <head>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
@@ -158,4 +333,7 @@
         gearPage.parentNode.removeChild(gearPage);
         document.title = "Error";
     }
-</script></html>
+</script>
+-->
+
+</html>
