@@ -1,7 +1,7 @@
 <!doctype html>
 
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <canvas id="gameCanvas" width="700" height="450"></canvas>
     <script>
         var canvas, ctx;
 
@@ -22,7 +22,7 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 80;
+        const PADDLE_WIDTH = 90;
         const PADDLE_HEIGHT = 20;
         var paddleXspeed = 10;
         var paddleYspeed = 5;
@@ -76,7 +76,7 @@
         var brickXpos = 0;
         var brickYpos = 0;
         var brickGap = 10;
-        var rowCount = 2;
+        var rowCount = 3;
         var columnCount = 5;
 
 
@@ -93,7 +93,7 @@
 
             if (paddleStart == false) {
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
-                paddleYpos = canvas.height * 0.82;
+                paddleYpos = canvas.height * 0.82 ;
                 paddleStart = true;
             }
             drawPaddle(); //funciotns to create draw and make paddle move
@@ -103,8 +103,8 @@
             if (ballActive == false) {
                 ballXpos = 200;
                 ballYpos = 200;
-                ballYspeed = 3;
-                ballXspeed = Math.floor(Math.random() * (12 - 7) + 7);
+                ballYspeed = Math.random() * (8-5)+5;
+                ballXspeed = Math.random() * (18 - 7 + 7);
                 ballActive = true;
             }
 
@@ -125,6 +125,15 @@
             
             bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
                 drawImg(brickImg, brick.brickXpos,brick.brickYpos,brick.brickWidth,brick.brickHeight); 
+                
+                                
+                if(brick.brickYpos+brick.brickHeight>=ballYpos &&
+                   brick.brickYpos<ballYpos &&
+                   ballXpos >= brick.brickXpos && 
+                   ballXpos+ballDiameter<=brick.brickXpos+brick.brickWidth) {
+                delete brick.brickXpos;
+                ballYspeed*=-1;
+                }
                
             });
 
@@ -137,12 +146,12 @@
             
                   
             
-               if (brickCount<=5) {
-                   brickYpos = 20;
+               if (brickCount<=columnCount) {
+                   brickYpos = 50;
                    brickXpos= (canvas.width*0.2) * brickCount;
                }   else {
-                   brickYpos = 20 + brickGap + brickHeight*(rowCount-1);
-                   brickXpos = (canvas.width*0.2) * (brickCount-6);
+                   brickYpos = 50 + brickGap + brickHeight*(rowCount-1);
+                   brickXpos = (canvas.width*0.2) * (brickCount-6) ;
                }
             
                 brickWidth = canvas.width/columnCount - brickGap;
@@ -163,7 +172,7 @@
         function drawScore() {
             ctx.font = "30px Times New Roman";
             ctx.fillStyle = "red";
-            ctx.fillText("Score: " + score, 15, 30);
+            ctx.fillText("level: " + level, 15, 30);
             ctx.fillText("lifes: " + lifes, canvas.width / 3, 30);
             ctx.fillText("lifes: " + lifes, canvas.width / 3, 30);
             if (gameActive == true) {
@@ -201,35 +210,55 @@
 
             ballXpos += ballXspeed;
             ballYpos += ballYspeed;
-
-
-            if (ballXpos + ballDiameter >= canvas.width) {
+            
+            if(ballXpos+ballDiameter>canvas.width) {   //stop the ball geting stuck in the right wall
+                ballXpos = canvas.width-ballDiameter;
+            }
+            
+            if(ballXpos<0) {   //stops ball getiing stuck in the left ball
+                ballXpos=0;
+            }
+            
+            if (ballXpos + ballDiameter >= canvas.width) {  //right wall bounce
                 ballXspeed *= -1;
             }
 
-            if (ballXpos <= 0) {
+            if (ballXpos <= 0) {   //left wall bounce
                 ballXspeed *= -1;
             }
 
-            if (ballYpos + ballDiameter >= canvas.width) {
+            if (ballYpos + ballDiameter >= canvas.height + 200) {    //floor detecion
                 ballYspeed *= -1;
+                for(i=1;i>0;i--) {
+                    lifes-=1;
+                }    
+                if (lifes<0) {
+                    alert('haha your game is over');
+                    alert('get shrected scrub');
+                    alert('your time is oger');
+                }
             }
 
             if (ballYpos <= 0) {
                 ballYspeed *= -1;
             }
 
-            if (ballYpos + ballDiameter > paddleYpos &&
+            if (ballYpos + ballDiameter > paddleYpos &&  //ball collision with paddle
                 ballYpos < paddleYpos + PADDLE_HEIGHT &&
                 ballXpos + ballDiameter > paddleXpos &&
                 ballXpos < paddleXpos + PADDLE_WIDTH) {
                 if (ballYspeed > 0) {
+                    ballYspeed = Math.random() * (5-3)+3;
                     ballYspeed *= -1;
-
+                    ballXspeed = ((ballXpos+ballDiameter/2)- (paddleXpos+PADDLE_WIDTH/2))/3.5;
                 }
 
 
             }
+            
+            
+                  //paddle contact with brick}
+            
 
         }
 
