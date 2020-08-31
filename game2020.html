@@ -18,7 +18,6 @@
 
 
 
-        // paddle variables and constants
 
         var paddleXpos = 0;
         var paddleYpos = 0;
@@ -27,7 +26,7 @@
         var paddleXspeed = 10;
         var paddleYspeed = 5;
         var paddleColor = 'green';
-        var paddleStart = false;
+        var gameStart = false;
 
         //ball variables
 
@@ -70,14 +69,18 @@
         //bricks variables
         var bricks = [];
         var brickCount = 0;
-        var brickMaxCount = 10;
-        var brickWidth = 50;
+        var brickMaxCount = 0;  //in mainloop is based of rowCount times rowWidth
+        var brickWidth = 40;
         var brickHeight = 50;
         var brickXpos = 0;
         var brickYpos = 0;
-        var brickGap = 10;
-        var rowCount = 3;
-        var columnCount = 5;
+        
+        var brickXgap=7;
+        var brickYgap=20
+        var rowCount = 1;
+        var rowMaxCount = 5;
+        var columnCount = 1;
+        var columnMaxCount = 5;
 
 
 
@@ -91,11 +94,25 @@
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
 
-            if (paddleStart == false) {
-                paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
+            if (gameStart == false) {
+                paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;   //sets variables for when game first starts to make paddle in middle
                 paddleYpos = canvas.height * 0.82 ;
-                paddleStart = true;
+                gameStart = true;
+                
+//                 if(rowMaxCount*brickHeight+brickYgap+4000 < canvas.height) {
+//                      brickHeight = 100;
+//                     console.log('first');
+//                }  else {
+//                    while(rowMaxCount*brickHeight+brickYgap+40>= canvas.height) {
+//                        brickHeight = brickHeight - 1;
+//                        console.log('hello');
+//                    }
+//                }
+              
             }
+            
+            brickMaxCount = rowMaxCount * columnMaxCount;
+            
             drawPaddle(); //funciotns to create draw and make paddle move
             paddleMove();
 
@@ -119,21 +136,31 @@
 
         function drawBricks() { //to draw the brikcs
             
-            if(brickCount<=brickMaxCount) { // draws the right amount of bricks for the level
+            if(brickCount<brickMaxCount) { // draws the right amount of bricks for the level
                 bricks.push(addBrick());
             }
             
             bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
                 drawImg(brickImg, brick.brickXpos,brick.brickYpos,brick.brickWidth,brick.brickHeight); 
                 
-                                
-                if(brick.brickYpos+brick.brickHeight>=ballYpos &&
+                        
+                
+           
+                if(brick.brickYpos+brickHeight>=ballYpos &&
                    brick.brickYpos<ballYpos &&
                    ballXpos >= brick.brickXpos && 
-                   ballXpos+ballDiameter<=brick.brickXpos+brick.brickWidth) {
+                   ballXpos+ballDiameter<=brick.brickXpos+brick.brickWidth) {    //hitting the bottom of bricks
                 delete brick.brickXpos;
                 ballYspeed*=-1;
+
+                }  if(brick.brickYpos+brickHeight>ballYpos + ballDiameter &&
+                   brick.brickYpos<=ballYpos + ballDiameter &&
+                   ballXpos >= brick.brickXpos && 
+                   ballXpos+ballDiameter<=brick.brickXpos+brick.brickWidth) {  //hitting top of bricks
+                     delete brick.brickXpos;
+                ballYspeed*=-1;
                 }
+                
                
             });
 
@@ -146,16 +173,33 @@
             
                   
             
-               if (brickCount<=columnCount) {
-                   brickYpos = 50;
-                   brickXpos= (canvas.width*0.2) * brickCount;
-               }   else {
-                   brickYpos = 50 + brickGap + brickHeight*(rowCount-1);
-                   brickXpos = (canvas.width*0.2) * (brickCount-6) ;
-               }
             
-                brickWidth = canvas.width/columnCount - brickGap;
-                brickHeight = 30;
+//               if (brickCount<=columnCount) {
+//                   brickYpos = 50;
+//                   brickXpos= (canvas.width*0.2) * brickCount;
+//               }   else {
+//                   brickYpos = 50 + brickGap + brickHeight*(rowCount-1);
+//                   brickXpos = (canvas.width*0.2) * (brickCount-6) ;
+//               }
+            
+            
+//            
+            
+            
+            
+            
+            rowCount=Math.floor(brickCount/columnMaxCount);
+            
+            columnCount = brickCount - (columnMaxCount*(rowCount));
+            
+            brickXpos = (canvas.width*0.2) *columnCount;
+            
+            brickYpos = 40 + brickYgap*rowCount + brickHeight * rowCount;
+            
+            
+                brickWidth = canvas.width/columnMaxCount - brickXgap;
+            
+               brickHeight = 40;
             
             
             var newBrick = {
@@ -233,9 +277,9 @@
                     lifes-=1;
                 }    
                 if (lifes<0) {
-                    alert('haha your game is over');
-                    alert('get shrected scrub');
-                    alert('your time is oger');
+//                    alert('haha your game is over');
+//                    alert('get shrected scrub');
+//                    alert('your time is oger');
                 }
             }
 
