@@ -75,7 +75,7 @@
         var brickXpos = 0;
         var brickYpos = 0;
 
-        var brickTopGap = 300;
+        var brickTopGap = 50;
         var brickXgap = 7;
         var brickYgap = 2;
         var rowCount = 1;
@@ -173,22 +173,22 @@
                     ballXpos<brick.brickXpos - ballDiameter/2 && 
                     ballYpos<= brick.brickYpos+ brick.brickHeight&&
                     ballYpos+ballDiameter>= brick.brickYpos
-                   )             {                           // left side of bricks need to fix
+                   )             {                           
                 delete brick.brickXpos;
-                    console.log('what up bro');
+                    console.log('what up g');
                     if(ballXspeed > 0)
                     ballXspeed*=-1;
                 
                 }
                 
-                 if (ballXpos<=brick.brickXpos  &&
-                    ballXpos<brick.brickXpos - ballDiameter/2 && 
+                 if (ballXpos<=brick.brickXpos + brick.brickWidth  &&
+                    ballXpos+ ballDiameter> brick.brickXpos + brick.brickWidth + ballDiameter/2 && 
                     ballYpos<= brick.brickYpos+ brick.brickHeight&&
                     ballYpos+ballDiameter>= brick.brickYpos
                    )             {                           // right side of bricks need to fix  neeeeeed to change to rightththt
                 delete brick.brickXpos;
                     console.log('what up bro');
-                    if(ballXspeed > 0)
+                    if(ballXspeed < 0)
                     ballXspeed*=-1;
                 
                 }
@@ -415,7 +415,7 @@
     </script>
 </body>
 
-<h2> ball should keep going forward if you get two bricks with 1 ball inteded fucntion for sure</h2>
+<h2> this is bradskines game</h2>
 
 
 
