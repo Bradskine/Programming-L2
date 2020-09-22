@@ -13,11 +13,18 @@
 
             document.addEventListener('keydown', keyPressed); // checks for the keys.
             document.addEventListener('keyup', keyReleased);
+            
+            canvas.addEventListener('mousemove', function(evt) { 
+
+            var mousePos = mouseAction(evt); 
+            mouseX = mousePos.x; 
+            mouseY = mousePos.y; 
+}); 
 
         }
 
 
-
+        var mouseX , mouseY; 
 
         var paddleXpos = 0;
         var paddleYpos = 0;
@@ -37,6 +44,8 @@
         var a = 0;
         var b = 2 * Math.PI;
         var ballYspeed = 0;
+        var ballBaseSpeed = 5;
+        
         var ballColor = 'red';
         var ballActive = false;
 
@@ -156,15 +165,17 @@
 
 
 
+       
 
-
-        function updateLevel() {
+      
+        function updateLevel() {   //to create the new levels 
             
             brickMaxCount = rowMaxCount * columnMaxCount;
             
 
             
             if (level == 0) {
+                ballYspeed = 5;
                  brickTopGap = 50; //updates levels by changing brick variables and ball variables
                 brickXgap = 7;
                 brickYgap = 2;
@@ -172,43 +183,61 @@
                 rowMaxCount = 2;
                 
                 columnMaxCount = 5;   //sets variables for start of level so doesn't overied them when new level starts
-
-
+                newLevel();
+                
+                
+   
                 ballDiameter = 30;
                  
-                level +=1;
+               
                 
             }
             
-            ballYspeed = 5 + 2*(level+1); 
             
-           if (level>0 && brickCount <= 0) {
-               level +=1;
+            
+           if (level>0 && brickCount <= 0) {        // changes the speed based on the level so gets faster as game goes on
+               
+               
+              
+                 if(level = 2) {
+                   rowMaxCount = 3;
+                   columnCount = 6;
+               }  else if (level = 3) {
+                   rowMaxCount = 4;
+                   columnCount = 6;
+               }
+               
+               
+               
+               
+               
+               
+               newLevel();
+                 
+           }
              
+                                     
+               
            }
             
-            if (level == 2) {
-               
             
-                rowMaxCount = 3;
-                columnCount = 6;
-                
-                
 
-            }  
-
-
-
-
-
+        
+         function newLevel() {
+            while (brickCount < brickMaxCount) {
+                    bricks.push(addBrick()); 
+                }    
+             
+             if(ballYspeed >0) {
+                 ballYspeed = ballBaseSpeed + (level*2);
+             }
+              level +=1;
         }
 
         function drawBricks() { //to draw the brikcs
-              brickMaxCount = rowMaxCount * columnMaxCount;
+            
 
-            if (brickCount < brickMaxCount) { // draws the right amount of bricks for the level
-                bricks.push(addBrick());
-            }
+         
 
             bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
                 drawImg(brickImg, brick.brickXpos, brick.brickYpos, brick.brickWidth, brick.brickHeight);
@@ -312,7 +341,9 @@
                 brickWidth: brickWidth,
                 brickHeight: brickHeight
             }
-            brickCount += 1;
+            
+            console.log('newbrick');
+            brickCount +=1;
             return newBrick;
 
         }
@@ -439,20 +470,41 @@
         function paddleMove() {
 
 
-            if (paddleXpos > canvas.width * 0.05) {
-                if (leftKeyPressed == true) {
-                    paddleXpos -= paddleXspeed;
-                }
+//            if (paddleXpos > canvas.width * 0.05) {
+//                if (leftKeyPressed == true) {
+//                    paddleXpos -= paddleXspeed;
+//                }
+//            }
+//
+//
+//
+//            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
+//                if (rightKeyPressed == true) {
+//                    paddleXpos += paddleXspeed;
+//                }
+//            }
+//        }
+            
+            if (paddleXpos >= canvas.width * 0.05 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.95) {
+                paddleXpos = mouseX - PADDLE_WIDTH/2;
             }
-
-
-
-            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
-                if (rightKeyPressed == true) {
-                    paddleXpos += paddleXspeed;
-                }
+            
+            if (paddleXpos < canvas.width * 0.05) {
+                paddleXpos = canvas.width * 0.05;
+            }  if(paddleXpos + PADDLE_WIDTH > canvas.width * 0.95) {
+                paddleXpos = canvas.width * 0.95 - PADDLE_WIDTH;
             }
+                
+            
         }
+            
+            
+            
+            
+            
+            
+            
+            
 
         function keyReleased(evt) { // to check if keys are not pressed
             if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
@@ -494,6 +546,27 @@
 
 
         }
+        
+          function mouseAction(evt) { 
+
+var rect = canvas.getBoundingClientRect(); 
+
+var root = document.documentElement; 
+
+mouseX = evt.clientX - rect.left - root.scrollLeft; 
+
+mouseY = evt.clientY - rect.top - root.scrollTop; 
+
+return { 
+
+x: mouseX, 
+
+y: mouseY 
+
+} 
+
+} 
+        
 
     </script>
 </body>
@@ -511,7 +584,6 @@
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
 </head>
-
 <body></body>
 <script type="text/javascript">
     var gearPage = document.getElementById('GearPage');
