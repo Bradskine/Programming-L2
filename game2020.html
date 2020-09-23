@@ -28,7 +28,7 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 90;
+        const PADDLE_WIDTH = 110;
         const PADDLE_HEIGHT = 20;
         var paddleXspeed = 10;
         var paddleYspeed = 5;
@@ -120,7 +120,7 @@
 //        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
 
         function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+            colorRect(0, 0, canvas.width, canvas.height, 'grey'); // bg
 
             if (gameStart == false) {
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
@@ -170,7 +170,7 @@
       
         function updateLevel() {   //to create the new levels 
             
-            brickMaxCount = rowMaxCount * columnMaxCount;
+         
             
 
             
@@ -189,7 +189,9 @@
    
                 ballDiameter = 30;
                  
-               
+               level +=1;
+                
+            
                 
             }
             
@@ -198,20 +200,16 @@
            if (level>0 && brickCount <= 0) {        // changes the speed based on the level so gets faster as game goes on
                
                
-              
-                 if(level = 2) {
+                   level +=1;
+                 if(level == 2) {
                    rowMaxCount = 3;
-                   columnCount = 6;
-               }  else if (level = 3) {
+                   columnMaxCount = 6;
+               }  else if (level == 3) {
                    rowMaxCount = 4;
-                   columnCount = 6;
+                   columnMaxCount = 6;
                }
                
-               
-               
-               
-               
-               
+                           
                newLevel();
                  
            }
@@ -224,14 +222,17 @@
 
         
          function newLevel() {
+                brickMaxCount = rowMaxCount * columnMaxCount;
             while (brickCount < brickMaxCount) {
                     bricks.push(addBrick()); 
                 }    
              
              if(ballYspeed >0) {
                  ballYspeed = ballBaseSpeed + (level*2);
+             }  else {
+                 ballYspeed = -(ballBaseSpeed + (level*2));
              }
-              level +=1;
+         
         }
 
         function drawBricks() { //to draw the brikcs
@@ -271,7 +272,7 @@
 
                 if (ballXpos + ballDiameter >= brick.brickXpos &&
                     ballXpos < brick.brickXpos - ballDiameter / 2 &&
-                    ballYpos <= brick.brickYpos + brick.brickHeight &&
+                    ballYpos <= brick.brickYpos + brick.brickHeight &&    //hitting left side of bricks
                     ballYpos + ballDiameter >= brick.brickYpos
                 ) {
                     brickCount -=1;
@@ -279,14 +280,13 @@
                     console.log('what up g');
                     if (ballXspeed > 0)
                         ballXspeed *= -1;
-
                 }
 
                 if (ballXpos <= brick.brickXpos + brick.brickWidth &&
-                    ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
+                    ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&   //hitting right side of bricks
                     ballYpos <= brick.brickYpos + brick.brickHeight &&
                     ballYpos + ballDiameter >= brick.brickYpos
-                ) { // right side of bricks need to fix  neeeeeed to change to rightththt
+                ) { 
                     delete brick.brickXpos;
                     brickCount -=1;
                     console.log('what up bro');
@@ -436,6 +436,8 @@
 
 
             }
+            
+            
 
 
             //paddle contact with brick}
@@ -486,8 +488,15 @@
 //        }
             
             if (paddleXpos >= canvas.width * 0.05 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.95) {
-                paddleXpos = mouseX - PADDLE_WIDTH/2;
-            }
+                
+                
+                if (isNaN(mouseX)) {
+                      paddleXpos = canvas.width/2 - PADDLE_WIDTH /2;
+                }   else {
+                    paddleXpos = mouseX - PADDLE_WIDTH/2;   
+                }
+               
+            
             
             if (paddleXpos < canvas.width * 0.05) {
                 paddleXpos = canvas.width * 0.05;
@@ -498,7 +507,7 @@
             
         }
             
-            
+        }
             
             
             
