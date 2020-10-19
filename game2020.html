@@ -14,17 +14,10 @@
             document.addEventListener('keydown', keyPressed); // checks for the keys.
             document.addEventListener('keyup', keyReleased);
 
-            canvas.addEventListener('mousemove', function(evt) {
-
-                var mousePos = mouseAction(evt);
-                mouseX = mousePos.x;
-                mouseY = mousePos.y;
-            });
-
         }
 
 
-        var mouseX, mouseY;
+
 
         var paddleXpos = 0;
         var paddleYpos = 0;
@@ -32,7 +25,7 @@
         const PADDLE_HEIGHT = 20;
         var paddleXspeed = 10;
         var paddleYspeed = 5;
-        var paddleColor = 'black';
+        var paddleColor = 'green';
         var gameStart = false;
 
         //ball variables
@@ -41,14 +34,9 @@
         var ballYpos = 0;
         var ballDiameter = 30;
         var ballXspeed = 50;
-        var balls = [];
-        var ballCount = 0;
-        var ballMaxCount = 0;
         var a = 0;
         var b = 2 * Math.PI;
         var ballYspeed = 0;
-        var ballBaseSpeed = 5;
-
         var ballColor = 'red';
         var ballActive = false;
 
@@ -83,7 +71,6 @@
         var brickCount = 0;
         var brickMaxCount = 0; //in mainloop is based of rowCount times rowWidth
         var brickWidth = 40;
-        var brickSpace = 0;
         var brickHeight = 50;
         var brickXpos = 0;
         var brickYpos = 0;
@@ -92,9 +79,9 @@
         var brickXgap = 7;
         var brickYgap = 2;
         var rowCount = 1;
-        var rowMaxCount = 0;
+        var rowMaxCount = 2;
         var columnCount = 1;
-        var columnMaxCount = 0;
+        var columnMaxCount = 5;
 
 
 
@@ -106,25 +93,25 @@
         var gameActive = false;
         var difficulty = 'normal'
 
-        //        var name = prompt("What's your name") // ask for the name
-        //        while (name.length == 0 || name == 'null') { // if the names lenght is 0 or the player clicks cancel it will keep asking until they type a valid name.
-        //            alert("Your name must be more than one character");
-        //            name = prompt("What's your name?");
-        //        }
-        //        var difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard", 'Normal') // ask for difficulty.
-        //        if (difficulty == null) { // checks they did'nt click null because if I check in next loop it cannot read .toLowerCase() of null.
-        //            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //        }
-        //        while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'normal' && difficulty.toLowerCase() !== 'hard') { //makes sure they typre hard, normal or easy. Uses .toLowerCase so it doesn't matter if the user uses capital letters or not.
-        //            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //            if (difficulty == null) {
-        //                difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //            }
-        //        }
-        //        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
+//        var name = prompt("What's your name") // ask for the name
+//        while (name.length == 0 || name == 'null') { // if the names lenght is 0 or the player clicks cancel it will keep asking until they type a valid name.
+//            alert("Your name must be more than one character");
+//            name = prompt("What's your name?");
+//        }
+//        var difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard", 'Normal') // ask for difficulty.
+//        if (difficulty == null) { // checks they did'nt click null because if I check in next loop it cannot read .toLowerCase() of null.
+//            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
+//        }
+//        while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'normal' && difficulty.toLowerCase() !== 'hard') { //makes sure they typre hard, normal or easy. Uses .toLowerCase so it doesn't matter if the user uses capital letters or not.
+//            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
+//            if (difficulty == null) {
+//                difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
+//            }
+//        }
+//        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
 
         function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'grey'); // bg
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
 
             if (gameStart == false) {
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
@@ -144,15 +131,22 @@
 
             }
 
-
+           
 
             drawPaddle(); //funciotns to create draw and make paddle move
             paddleMove();
 
 
+            if (ballActive == false) {
+                ballXpos = 200;
+                ballYpos = 200;
+                ballYspeed =5;
+                ballXspeed = Math.random() * (18 - 7 + 7);
+                ballActive = true;
+            }
 
             drawScore();
-            drawBalls();
+            drawBall();
             ballMove();
             drawBricks();
             updateLevel();
@@ -164,194 +158,120 @@
 
 
 
-
-        function updateLevel() { //to create the new levels 
-
+        function updateLevel() {
+            
+            brickMaxCount = rowMaxCount * columnMaxCount;
             
 
-
-
-
+            
             if (level == 0) {
-                ballMaxCount = 1;
-                pushBall();
-                brickTopGap = 50; //updates levels by changing brick variables and ball variables
+                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
                 brickXgap = 7;
                 brickYgap = 2;
-
+                
                 rowMaxCount = 2;
-
-                columnMaxCount = 5; //sets variables for start of level so doesn't overied them when new level starts
-
+                
+                columnMaxCount = 5;   //sets variables for start of level so doesn't overied them when new level starts
 
 
                 ballDiameter = 30;
-
-                brickSpace = 0;
-//                newLevel();
-              
-                newLevel();
-            }
-
-
-
-            if (level > 0 && brickCount <= 0) { // changes the speed based on the level so gets faster as game goes on
-
-
-
-                if (level == 1) { //changes stuff for each levels
-                    //                    brickSpace = brickWidth + brickXgap;
-                    
-                    rowMaxCount = 3;
-                    columnMaxCountCount = 5;
-                    ballMaxCount = 3;
+                 
+                level +=1;
                 
-                  
-                } 
-                else if (level == 2) {
-                    rowMaxCount = 4;
-                    columnMaxCount = 6;
-                } else if (level == 3) {
-                    brickXgap = 2;
-                    brickYgap = 1;
-                    rowMaxCount = 5;
-                    columnMaxCount = 7;
-                }  else {
-                    
-                    
-                    
-                    rowMaxCount = Math.floor(1.4 * level +1);
-                    columnMaxCount = level +4;
-                }
-
-                newLevel();
-
-
-
-
-
-
             }
-
-
-
-        } //end of update level function
-
-
-        function pushBall() {
-            while (ballCount < ballMaxCount) {
-                balls.push(newBall());
-
-            }
-        }
-
-
-        function newLevel() { //fuction for new level
-
-brickMaxCount = rowMaxCount * columnMaxCount;
             
-            while (brickCount < brickMaxCount) {
-                bricks.push(addBrick());
-            }
+            ballYspeed = 5 + 2*(level+1); 
+            
+           if (level>0 && brickCount <= 0) {
+               level +=1;
+             
+           }
+            
+            if (level == 2) {
+               
+            
+                rowMaxCount = 3;
+                columnCount = 6;
+                
+                
+
+            }  
 
 
 
-            balls.forEach(function(ball, index, array) {
-                if (balls.ballYspeed > 0) {
-                    balls.ballYspeed = ballBaseSpeed + (level * 2);
-                } else {
-                    balls.ballYspeed = -(ballBaseSpeed + (level * 2));
-                }
 
 
-            });
-
-            level += 1;
         }
 
         function drawBricks() { //to draw the brikcs
+              brickMaxCount = rowMaxCount * columnMaxCount;
 
-
-
+            if (brickCount < brickMaxCount) { // draws the right amount of bricks for the level
+                bricks.push(addBrick());
+            }
 
             bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
-                balls.forEach(function(balls, index, array) {
+                drawImg(brickImg, brick.brickXpos, brick.brickYpos, brick.brickWidth, brick.brickHeight);
 
 
 
-                    drawImg(brickImg, brick.brickXpos, brick.brickYpos, brick.brickWidth, brick.brickHeight);
-
-
-
-                    if (brick.brickYpos + brick.brickHeight >= balls.ballYpos &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
-                        balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting the bottom of bricks
-                        brickCount -= 1;
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                         delete brick.brickYpos;
-                        delete brick.brickXpos;
-                        if (balls.ballYspeed < 0) {
-                            balls.ballYspeed *= -1;
-
-                        }
-
-                    }
-                    if (balls.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
-                        brick.brickYpos <= balls.ballYpos + ballDiameter &&
-                        balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting top of bricks
-                        brickCount -= 1;
-                        delete brick.brickXpos;
-                         delete brick.brickYpos;
-                        if (balls.ballYspeed > 0) {
-
-                            balls.ballYspeed *= -1;
-                        }
+                if (brick.brickYpos + brick.brickHeight >= ballYpos &&
+                    ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
+                    ballXpos + ballDiameter >= brick.brickXpos &&
+                    ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting the bottom of bricks
+                    brickCount -=1;
+                    delete brick.brickXpos;
+                    if (ballYspeed < 0) {
+                        ballYspeed *= -1;
+                        console.log('bottom');
                     }
 
-
-                    if (balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos < brick.brickXpos - ballDiameter / 2 &&
-                        balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos
-                    ) {
-                        brickCount -= 1;
-                        delete brick.brickXpos;
-                        delete brick.brickYpos;
-                        if (balls.ballXspeed > 0)
-                            balls.ballXspeed *= -1;
-
+                }
+                if (ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
+                    brick.brickYpos <= ballYpos + ballDiameter &&
+                    ballXpos + ballDiameter >= brick.brickXpos &&
+                    ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting top of bricks
+                    brickCount-=1;
+                    delete brick.brickXpos;
+                    if (ballYspeed > 0) {
+                        console.log('top');
+                        ballYspeed *= -1;
                     }
+                }
 
-                    if (balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        balls.ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
-                        balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos
-                    ) { // right side of bricks need to fix  neeeeeed to change to rightththt
-                        delete brick.brickXpos;
-                         delete brick.brickYpos;
-                        brickCount -= 1;
 
-                        if (balls.ballXspeed < 0)
-                            balls.ballXspeed *= -1;
+                if (ballXpos + ballDiameter >= brick.brickXpos &&
+                    ballXpos < brick.brickXpos - ballDiameter / 2 &&
+                    ballYpos <= brick.brickYpos + brick.brickHeight &&
+                    ballYpos + ballDiameter >= brick.brickYpos
+                ) {
+                    brickCount -=1;
+                    delete brick.brickXpos;
+                    console.log('what up g');
+                    if (ballXspeed > 0)
+                        ballXspeed *= -1;
 
-                    }
-                });
+                }
+
+                if (ballXpos <= brick.brickXpos + brick.brickWidth &&
+                    ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
+                    ballYpos <= brick.brickYpos + brick.brickHeight &&
+                    ballYpos + ballDiameter >= brick.brickYpos
+                ) { // right side of bricks need to fix  neeeeeed to change to rightththt
+                    delete brick.brickXpos;
+                    brickCount -=1;
+                    console.log('what up bro');
+                    if (ballXspeed < 0)
+                        ballXspeed *= -1;
+
+                }
+
             });
 
 
 
         }
-        
-        
-       
+
         function addBrick() {
 
 
@@ -374,23 +294,16 @@ brickMaxCount = rowMaxCount * columnMaxCount;
 
             rowCount = Math.floor(brickCount / columnMaxCount);
 
-
-
-
             columnCount = brickCount - (columnMaxCount * (rowCount));
 
-
-
-
-
-            brickXpos = (canvas.width * ( 1/columnMaxCount)) * columnCount;
+            brickXpos = (canvas.width * 0.2) * columnCount;
 
             brickYpos = brickTopGap + brickYgap * rowCount + brickHeight * rowCount;
 
 
             brickWidth = canvas.width / columnMaxCount - brickXgap;
 
-            brickHeight = canvas.height*0.55 / rowMaxCount - brickYgap;
+            brickHeight = brickHeight;
 
 
             var newBrick = {
@@ -399,8 +312,6 @@ brickMaxCount = rowMaxCount * columnMaxCount;
                 brickWidth: brickWidth,
                 brickHeight: brickHeight
             }
-
-            console.log('newbrick');
             brickCount += 1;
             return newBrick;
 
@@ -443,123 +354,79 @@ brickMaxCount = rowMaxCount * columnMaxCount;
             ctx.fillRect(x, y, w, h);
         }
 
-
-
-        function gameOver() {
-            if (lifes < 1) {
-                //                alert('Game Over')
-
-            }
-        }
-
         function ballMove() { //makes the ball move
 
-            balls.forEach(function(balls, index, array) { //uese for each so can have muitiple on page at 1 
 
-                balls.ballXpos += balls.ballXspeed;
-                balls.ballYpos += balls.ballYspeed;
+            ballXpos += ballXspeed;
+            ballYpos += ballYspeed;
 
-                if (balls.ballXpos + ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
-                    balls.ballXpos = canvas.width - ballDiameter;
+            if (ballXpos + ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
+                ballXpos = canvas.width - ballDiameter;
+            }
+
+            if (ballXpos < 0) { //stops ball getiing stuck in the left ball
+                ballXpos = 0;
+            }
+
+            if (ballXpos + ballDiameter >= canvas.width) { //right wall bounce
+                ballXspeed *= -1;
+            }
+
+            if (ballXpos <= 0) { //left wall bounce
+                ballXspeed *= -1;
+            }
+
+            if (ballYpos + ballDiameter >= canvas.height + 200) { //floor detecion
+                ballYspeed *= -1;
+                for (i = 1; i > 0; i--) {
+                    lifes -= 1;
+                }
+                if (lifes < 0) {
+                    //                    alert('haha your game is over');
+                    //                    alert('get shrected scrub');
+                    //                    alert('your time is oger');
+                }
+            }
+
+            if (ballYpos <= 0) {
+                ballYspeed *= -1;
+            }
+
+            if (ballYpos + ballDiameter > paddleYpos && //ball collision with paddle
+                ballYpos < paddleYpos + PADDLE_HEIGHT &&
+                ballXpos + ballDiameter > paddleXpos &&
+                ballXpos < paddleXpos + PADDLE_WIDTH) {
+                if (ballYspeed > 0) {
+                    ballYspeed = Math.random() * (5 - 3) + 3;
+                    ballYspeed *= -1;
+                    ballXspeed = ((ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
+                    
                 }
 
-                if (balls.ballXpos < 0) { //stops ball getiing stuck in the left ball
-                    balls.ballXpos = 0;
-                }
 
-                if (balls.ballXpos + ballDiameter >= canvas.width) { //right wall bounce
-                    balls.ballXspeed *= -1;
-                }
-
-                if (balls.ballXpos <= 0) { //left wall bounce
-                    balls.ballXspeed *= -1;
-                }
-
-                if (balls.ballYpos + ballDiameter >= canvas.height + 200) { //floor detecion
-                    balls.ballYspeed *= -1;
-                    for (i = 1; i > 0; i--) {
+            }
 
 
-
-                        if (ballCount > 1) {
-                            delete balls.ballXspeed; //to delete tha ball
-                            ballCount -= 1;
-                        } else {
-                            lifes -= 1;
-                        }
-
-
-
-
-
-                    }
-                    if (lifes < 0) {
-                        //                    alert('haha your game is over');
-                        //                    alert('get shrected scrub');
-                        //                    alert('your time is oger');
-                    }
-                }
-
-                if (balls.ballYpos <= 0) {
-                    balls.ballYspeed *= -1;
-                }
-
-                if (balls.ballYpos + ballDiameter > paddleYpos && //ball collision with paddle
-                    balls.ballYpos < paddleYpos + PADDLE_HEIGHT &&
-                    balls.ballXpos + ballDiameter > paddleXpos &&
-                    balls.ballXpos < paddleXpos + PADDLE_WIDTH) {
-                    if (balls.ballYspeed > 0) {
-                        balls.ballYspeed = Math.random() * (5 - 3) + 3;
-                        balls.ballYspeed *= -1;
-                        balls.ballXspeed = ((balls.ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
-
-                    }
-
-
-                }
-
-            });
             //paddle contact with brick}
 
 
-        } // end of ballMove function
-
-
-        function drawBalls() { //draws the ball
-            balls.forEach(function(balls, index, array) {
-                drawImg(ball, balls.ballXpos, balls.ballYpos, ballDiameter, ballDiameter);
-
-                //            drawCircle(ballXpos,,ballDiameter,a,b,ballColor);
-
-
-            });
+        }
+        
+        
+        function gameOver() {
+            if (lifes<1) {
+//                alert('Game Over')
+                console.log('game over');
+            }
         }
 
 
+        function drawBall() { //draws the ball
+            drawImg(ball, ballXpos, ballYpos, ballDiameter, ballDiameter);
 
-        function newBall() {
-
-
-
-            ballXpos = 200;
-            ballYpos = 200;
-            ballYspeed = 5;
-            ballXspeed = Math.random() * (18 - 7 + 7);
-            ballDiameter = 30;
+            //            drawCircle(ballXpos,ballYpos,ballDiameter,a,b,ballColor);
 
 
-
-            var newBall = {
-                ballXpos: ballXpos,
-                ballYpos: ballYpos,
-                ballXspeed: ballXspeed,
-                ballYspeed: ballYspeed,
-                ballDiameter: ballDiameter
-            }
-
-            ballCount += 1;
-            console.log('newball')
-            return newBall;
         }
 
 
@@ -572,53 +439,20 @@ brickMaxCount = rowMaxCount * columnMaxCount;
         function paddleMove() {
 
 
-            //            if (paddleXpos > canvas.width * 0.05) {
-            //                if (leftKeyPressed == true) {
-            //                    paddleXpos -= paddleXspeed;
-            //                }
-            //            }
-            //
-            //
-            //
-            //            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
-            //                if (rightKeyPressed == true) {
-            //                    paddleXpos += paddleXspeed;
-            //                }
-            //            }
-            //        }
-
-            if (paddleXpos >= canvas.width * 0.05 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.95) {
-
-
-                if (isNaN(mouseX)) {
-                    paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
-                } else {
-                    paddleXpos = mouseX - PADDLE_WIDTH / 2;
+            if (paddleXpos > canvas.width * 0.05) {
+                if (leftKeyPressed == true) {
+                    paddleXpos -= paddleXspeed;
                 }
-
-
-
-                if (paddleXpos < canvas.width * 0.05) {
-                    paddleXpos = canvas.width * 0.05;
-                }
-                if (paddleXpos + PADDLE_WIDTH > canvas.width * 0.95) {
-                    paddleXpos = canvas.width * 0.95 - PADDLE_WIDTH;
-                }
-
-
             }
 
 
 
+            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
+                if (rightKeyPressed == true) {
+                    paddleXpos += paddleXspeed;
+                }
+            }
         }
-
-
-
-
-
-
-
-
 
         function keyReleased(evt) { // to check if keys are not pressed
             if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
@@ -661,53 +495,18 @@ brickMaxCount = rowMaxCount * columnMaxCount;
 
         }
 
-        function mouseAction(evt) {
-
-            var rect = canvas.getBoundingClientRect();
-
-            var root = document.documentElement;
-
-            mouseX = evt.clientX - rect.left - root.scrollLeft;
-
-            mouseY = evt.clientY - rect.top - root.scrollTop;
-
-            return {
-
-                x: mouseX,
-
-                y: mouseY
-
-            }
-
-        }
-
     </script>
-    <h2> this is bradskines game</h2>
-
-
-    <style>
-        /*
-        canvas {
-            padding-left:0;
-            padding-right: 0;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-    
-*/
-
-    </style>
 </body>
 
+<h2> this is bradskines game</h2>
 
 
 
 
 
+<html>
 
 <!--
-<html>
 <head>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
@@ -720,5 +519,5 @@ brickMaxCount = rowMaxCount * columnMaxCount;
         gearPage.parentNode.removeChild(gearPage);
         document.title = "Error";
     }
-</script></html>
--->
+</script>
+--></html>
