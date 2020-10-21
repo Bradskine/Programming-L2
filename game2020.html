@@ -75,8 +75,8 @@
         var powerUp = new Image();
         ball.src = 'Img/ball.png';
         brickImg.src = 'Img/brick.png';
-        
-        
+
+
 
 
         //bricks variables
@@ -98,7 +98,7 @@
         var columnCount = 1;
         var columnMaxCount = 0;
 
-        
+
 
 
         // general game variables
@@ -176,7 +176,7 @@
 
             if (level == 0) {
                 ballMaxCount = 1
-                ballStrenth = 1;
+                
                 pushBall();
                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
                 brickXgap = 7;
@@ -185,7 +185,7 @@
                 rowMaxCount = 2;
 
                 columnMaxCount = 5; //sets variables for start of level so doesn't overied them when new level starts
-
+                brickStrength =1
 
 
                 ballDiameter = 30;
@@ -204,42 +204,43 @@
 
                 if (level == 1) { //changes stuff for each levels
                     //                    brickSpace = brickWidth + brickXgap;
-
+      
                     rowMaxCount = 3;
                     columnMaxCountCount = 5;
                     ballMaxCount = 3;
-
-
+                    brickStrength =1
+                    
                 } else if (level == 2) { // changes variables based on what level it is
                     rowMaxCount = 4;
                     columnMaxCount = 6;
+                    brickStrength =2;
                 } else if (level == 3) {
+                    
                     brickXgap = 2;
                     brickYgap = 1;
                     rowMaxCount = 5;
                     columnMaxCount = 7;
+                    brickStrength=3
                 } else {
-
-
-
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
+                    brickStrength = rand();
                 }
 
                 newLevel();
 
 
 
-
-
-
             }
-
 
 
         } //end of update level function
 
 
+        function rand() {
+            brickStrength = Math.floor(Math.random(3-1) +1);
+        }
+        
         function pushBall() {
             while (ballCount < ballMaxCount) { // pushs new ball based of its own varibles. Made it sepearte function too save line mimize glitch chance
                 balls.push(newBall());
@@ -279,9 +280,17 @@
             bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
                 balls.forEach(function(balls, index, array) {
 
+                    
+            if (brick.brickStrength == 1) {
+                brick.brickImg.src = 'Img/brick.png';
+            } else if (brick.brickStrength == 2) {
+                brick.brickImg.src = 'Img/stone.png';
+            } 
+                else {
+                brick.brickImg.src = 'Img/dimond.png';
+            }
 
-
-                    drawImg(brickImg, brick.brickXpos, brick.brickYpos, brick.brickWidth, brick.brickHeight);
+                    drawImg(brick.brickImg, brick.brickXpos, brick.brickYpos, brick.brickWidth, brick.brickHeight);
 
 
 
@@ -289,13 +298,13 @@
                         balls.ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
                         balls.ballXpos + ballDiameter >= brick.brickXpos &&
                         balls.ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting the bottom of bricks
-                   
+
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete brick.brickXpos;  // deltes brick all lowers brick strength if brick can take more than one hit
+                            delete brick.brickXpos; // deltes brick all lowers brick strength if brick can take more than one hit
                             delete brick.brickYpos;
                         } else {
-                            brick.brickStrength -=1;
+                            brick.brickStrength -= 1;
                         }
 
                         if (balls.ballYspeed < 0) {
@@ -308,13 +317,13 @@
                         brick.brickYpos <= balls.ballYpos + ballDiameter &&
                         balls.ballXpos + ballDiameter >= brick.brickXpos &&
                         balls.ballXpos <= brick.brickXpos + brick.brickWidth) { //hitting top of bricks
-                    
+
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
                             delete brick.brickXpos;
                             delete brick.brickYpos;
                         } else {
-                            brick.brickStrength -=1;
+                            brick.brickStrength -= 1;
                         }
 
                         if (balls.ballYspeed > 0) {
@@ -329,13 +338,13 @@
                         balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
                         balls.ballYpos + ballDiameter >= brick.brickYpos
                     ) {
-                        
+
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
                             delete brick.brickXpos;
                             delete brick.brickYpos;
                         } else {
-                            brick.brickStrength -=1;
+                            brick.brickStrength -= 1;
                         }
 
                         if (balls.ballXspeed > 0)
@@ -354,7 +363,7 @@
                             delete brick.brickXpos;
                             delete brick.brickYpos;
                         } else {
-                            brick.brickStrength -=1;
+                            brick.brickStrength -= 1;
                         }
 
 
@@ -410,9 +419,21 @@
 
             brickHeight = canvas.height * 0.55 / rowMaxCount - brickYgap;
 
-            brickStrength = 1; //decides how many times brick needs to be hit to break
+            brickStrength = brickStrength; //decides how many times brick needs to be hit to break
+
+            if (brickStrength == 1) {
+                brickImg.src = 'Img/brick.png';
+            } else if (brickStrength == 2) {
+                brickImg.src = 'Img/stone.png';
+            } 
+                else {
+                brickImg.src = 'Img/dimond.png';
+            }
+
+
 
             var newBrick = {
+                brickImg: brickImg,
                 brickStrength: brickStrength,
                 brickXpos: brickXpos,
                 brickYpos: brickYpos,
@@ -529,7 +550,7 @@
                     balls.ballXpos + ballDiameter > paddleXpos &&
                     balls.ballXpos < paddleXpos + PADDLE_WIDTH) {
                     if (balls.ballYspeed > 0) {
-                       
+
                         balls.ballYspeed *= -1;
                         balls.ballXspeed = ((balls.ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
 
