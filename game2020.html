@@ -221,10 +221,13 @@
                     rowMaxCount = 5;
                     columnMaxCount = 7;
                     brickStrength = 3
+                    ballMaxCount = 2;
+                    ballMaxCount = 2;
+                    pushBall();
                 } else {
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
-                    brickStrength = rand();
+                   
                 }
 
                 newLevel();
@@ -238,7 +241,7 @@
 
 
         function rand() {
-            brickStrength = Math.floor(Math.random(3 - 1) + 1);
+            brickStrength = Math.floor(Math.random() * (3 - 1) + 1);
         }
 
         function pushBall() {
@@ -276,9 +279,10 @@
 
 
 
-
-            bricks.forEach(function(brick, index, array) { //uese for each so can have muitiple on page at 1 time
-                balls.forEach(function(balls, index, array) {
+    var counter = 0;
+            bricks.forEach(function(brick) { //uese for each so can have muitiple on page at 1 time
+                counter++;
+                balls.forEach(function(balls) {
 
 
                     if (brick.brickStrength == 1) {
@@ -303,8 +307,9 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete brick.brickXpos; // deltes brick all lowers brick strength if brick can take more than one hit
-                            delete brick.brickYpos;
+                            delete bricks[counter-1];
+                            bricks = bricks.filter(item => item !== undefined); // deltes brick all lowers brick strength if brick can take more than one hit
+                           
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -323,8 +328,8 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete brick.brickXpos;
-                            delete brick.brickYpos;
+                            delete bricks[counter-1];
+                            bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -345,8 +350,8 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete brick.brickXpos;
-                            delete brick.brickYpos;
+                           delete bricks[counter-1];
+                            bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -365,8 +370,8 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete brick.brickXpos;
-                            delete brick.brickYpos;
+                            delete bricks[counter-1];
+                            bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -425,7 +430,9 @@
             brickHeight = canvas.height * 0.55 / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
-
+            if (level>=4) {
+                rand();
+            }
             if (brickStrength == 1) {
                 brickImg.src = 'Img/brick.png';
             } else if (brickStrength == 2) {
@@ -499,8 +506,9 @@
 
         function ballMove() { //makes the ball move
 
+            var counter2= 0;
             balls.forEach(function(balls, index, array) { //uese for each so can have muitiple on page at 1 
-
+          
                 balls.ballXpos += balls.ballXspeed;
                 balls.ballYpos += balls.ballYspeed;
 
@@ -527,6 +535,10 @@
 
 
                         if (ballCount > 1) {
+                            
+                            
+                            
+                            
                             delete balls.ballXspeed; //to delete tha ball
                             ballCount -= 1;
                         } else {
@@ -777,7 +789,6 @@
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
 </head>
-
 <body></body>
 <script type="text/javascript">
     var gearPage = document.getElementById('GearPage');
