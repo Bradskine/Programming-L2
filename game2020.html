@@ -37,8 +37,8 @@
 
         //ball variables
 
-        var ballXpos = 0;
-        var ballYpos = 0;
+        //        var ballXpos = 0;
+        //        var ballYpos = 0;
         var ballDiameter = 30;
         var ballXspeed = 50;
         var balls = [];
@@ -99,6 +99,8 @@
         var columnMaxCount = 0;
 
 
+        //powerup variables 
+        var
 
 
         // general game variables
@@ -175,7 +177,7 @@
 
 
             if (level == 0) {
-                ballMaxCount = 1
+                ballMaxCount = 2;
 
                 pushBall();
                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
@@ -207,7 +209,7 @@
 
                     rowMaxCount = 3;
                     columnMaxCountCount = 5;
-                    ballMaxCount = 3;
+
                     brickStrength = 1
 
                 } else if (level == 2) { // changes variables based on what level it is
@@ -221,13 +223,12 @@
                     rowMaxCount = 5;
                     columnMaxCount = 7;
                     brickStrength = 3
-                    ballMaxCount = 2;
-                    ballMaxCount = 2;
+
                     pushBall();
                 } else {
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
-                   
+
                 }
 
                 newLevel();
@@ -279,7 +280,7 @@
 
 
 
-    var counter = 0;
+            var counter = 0;
             bricks.forEach(function(brick) { //uese for each so can have muitiple on page at 1 time
                 counter++;
                 balls.forEach(function(balls) {
@@ -307,9 +308,9 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete bricks[counter-1];
+                            delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined); // deltes brick all lowers brick strength if brick can take more than one hit
-                           
+
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -319,8 +320,7 @@
 
                         }
 
-                    }
-                    if (balls.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
+                    } else if (balls.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
                         brick.brickYpos <= balls.ballYpos + ballDiameter &&
                         balls.ballXpos + ballDiameter >= brick.brickXpos &&
                         balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
@@ -328,7 +328,7 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete bricks[counter-1];
+                            delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
@@ -338,10 +338,7 @@
 
                             balls.ballYspeed *= -1;
                         }
-                    }
-
-
-                    if (balls.ballXpos + ballDiameter >= brick.brickXpos &&
+                    } else if (balls.ballXpos + ballDiameter >= brick.brickXpos &&
                         balls.ballXpos < brick.brickXpos - ballDiameter / 2 &&
                         balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
                         balls.ballYpos + ballDiameter >= brick.brickYpos && //hiting left side of bricks
@@ -350,7 +347,7 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                           delete bricks[counter-1];
+                            delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
@@ -359,9 +356,7 @@
                         if (balls.ballXspeed > 0)
                             balls.ballXspeed *= -1;
 
-                    }
-
-                    if (balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
+                    } else if (balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
                         balls.ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
                         balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
                         balls.ballYpos + ballDiameter >= brick.brickYpos && //hiting right side of bricks
@@ -370,7 +365,7 @@
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
-                            delete bricks[counter-1];
+                            delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                         } else {
                             brick.brickStrength -= 1;
@@ -380,6 +375,8 @@
                         if (balls.ballXspeed < 0)
                             balls.ballXspeed *= -1;
 
+                    } else {
+                        //not sure if i need this or not
                     }
                 });
             });
@@ -430,7 +427,7 @@
             brickHeight = canvas.height * 0.55 / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
-            if (level>=4) {
+            if (level >= 4) {
                 rand();
             }
             if (brickStrength == 1) {
@@ -506,9 +503,9 @@
 
         function ballMove() { //makes the ball move
 
-            var counter2= 0;
+
             balls.forEach(function(balls, index, array) { //uese for each so can have muitiple on page at 1 
-          
+
                 balls.ballXpos += balls.ballXspeed;
                 balls.ballYpos += balls.ballYspeed;
 
@@ -528,34 +525,7 @@
                     balls.ballXspeed *= -1;
                 }
 
-                if (balls.ballYpos + ballDiameter >= canvas.height + 200) { //floor detecion
-                    balls.ballYspeed *= -1;
-                    for (i = 1; i > 0; i--) {
 
-
-
-                        if (ballCount > 1) {
-                            
-                            
-                            
-                            
-                            delete balls.ballXspeed; //to delete tha ball
-                            ballCount -= 1;
-                        } else {
-                            lifes -= 1;
-                        }
-
-
-
-
-
-                    }
-                    if (lifes < 0) {
-                        //                    alert('haha your game is over');
-                        //                    alert('get shrected scrub');
-                        //                    alert('your time is oger');
-                    }
-                }
 
                 if (balls.ballYpos <= 0) {
                     balls.ballYspeed *= -1;
@@ -575,7 +545,7 @@
                 }
 
                 if (balls.ballXpos + ballDiameter >= paddleXpos &&
-                    balls.ballXpos < paddleXpos - ballDiameter / 3 && 
+                    balls.ballXpos < paddleXpos - ballDiameter / 3 &&
                     balls.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
                     balls.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
                     balls.ballXspeed > 0) {
@@ -585,14 +555,14 @@
 
                 }
 
-                    if(balls.ballXpos <= paddleXpos + PADDLE_WIDTH &&
-                    balls.ballXpos + ballDiameter> paddleXpos + PADDLE_WIDTH + ballDiameter/3 &&
+                if (balls.ballXpos <= paddleXpos + PADDLE_WIDTH &&
+                    balls.ballXpos + ballDiameter > paddleXpos + PADDLE_WIDTH + ballDiameter / 3 &&
                     balls.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
-                    balls.ballYpos +  ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
+                    balls.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
                     balls.ballXspeed < 0) {
-                        balls.ballXspeed *= -1;
-                    }
-            
+                    balls.ballXspeed *= -1;
+                }
+
 
 
             });
@@ -602,11 +572,56 @@
         } // end of ballMove function
 
 
+
         function drawBalls() { //draws the ball
-            balls.forEach(function(balls, index, array) {
-                drawImg(ball, balls.ballXpos, balls.ballYpos, ballDiameter, ballDiameter);
+            var ballCounter = 0;
+
+            balls.forEach(function(balls) {
+                ballCounter++;
+                drawImg(ball, balls.ballXpos, balls.ballYpos, balls.ballDiameter, balls.ballDiameter);
 
                 //            drawCircle(ballXpos,,ballDiameter,a,b,ballColor);
+
+
+
+                if (balls.ballYpos + ballDiameter >= canvas.height + 20) { //floor detecion
+                    balls.ballYspeed *= -1;
+
+
+
+                    console.log('helllo');
+
+                    if (ballCount > 1) {
+
+
+
+//                        delete ball.ballXspeed;
+                        delete balls.ballYspeed;
+                        delete balls.ballXspeed;
+                        delete balls.ballDiameter;
+                        delete balls.ballXspeed;
+                        delete balls.ballYspeed;
+
+
+
+                        //                            delete balls[ballCounter-1];
+                        //
+                        ////                             delete bricks[counter-1];
+                        ////                            bricks = bricks.filter(item => item !== undefined);
+                        //                            
+                        //                                balls = balls.filter(item => item !== undefined); // the above line makes the ball undefined this removes that 1
+                        ballCount -= 1;
+                    } else {
+                        lifes -= 1;
+                    }
+
+                    if (lifes < 0) {
+                        //                    alert('haha your game is over');
+                        //                    alert('get shrected scrub');
+                        //                    alert('your time is oger');
+                    }
+                }
+
 
 
             });
