@@ -37,10 +37,11 @@
 
         //ball variables
 
-        //        var ballXpos = 0;
-        //        var ballYpos = 0;
+        //               var ballXpos = 0;
+        //               var ballXpos = 0;
+        //             var ballYpos = 0;
         var ballDiameter = 30;
-        var ballXspeed = 50;
+        //        var ballXspeed = 50;
         var balls = [];
         var ballCount = 0;
         var ballMaxCount = 0;
@@ -70,10 +71,10 @@
         //images 
 
 
-        var ball = new Image();
+        var ball2 = new Image();
         var brickImg = new Image();
         var powerUp = new Image();
-        ball.src = 'Img/ball.png';
+        ball2.src = 'Img/ball.png';
         brickImg.src = 'Img/brick.png';
 
 
@@ -100,7 +101,7 @@
 
 
         //powerup variables 
-        var
+        var puWidth = 0;
 
 
         // general game variables
@@ -283,7 +284,7 @@
             var counter = 0;
             bricks.forEach(function(brick) { //uese for each so can have muitiple on page at 1 time
                 counter++;
-                balls.forEach(function(balls) {
+                balls.forEach(function(ball) {
 
 
                     if (brick.brickStrength == 1) {
@@ -298,11 +299,11 @@
 
 
 
-                    if (brick.brickYpos + brick.brickHeight >= balls.ballYpos &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
-                        balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        balls.ballYspeed < 0 // so ball doesn't hit corner and continue going
+                    if (brick.brickYpos + brick.brickHeight >= ball.ballYpos &&
+                        ball.ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
+                        ball.ballXpos + ballDiameter >= brick.brickXpos &&
+                        ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
+                        ball.ballYspeed < 0 // so ball doesn't hit corner and continue going
 
                     ) { //hitting the bottom of bricks
 
@@ -315,16 +316,16 @@
                             brick.brickStrength -= 1;
                         }
 
-                        if (balls.ballYspeed < 0) {
-                            balls.ballYspeed *= -1;
+                        if (ball.ballYspeed < 0) {
+                            ball.ballYspeed *= -1;
 
                         }
 
-                    } else if (balls.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
-                        brick.brickYpos <= balls.ballYpos + ballDiameter &&
-                        balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        balls.ballYspeed > 0) { //hitting top of bricks
+                    } else if (ball.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
+                        brick.brickYpos <= ball.ballYpos + ballDiameter &&
+                        ball.ballXpos + ballDiameter >= brick.brickXpos &&
+                        ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
+                        ball.ballYspeed > 0) { //hitting top of bricks
 
                         if (brick.brickStrength < 2) {
                             brickCount -= 1;
@@ -334,15 +335,15 @@
                             brick.brickStrength -= 1;
                         }
 
-                        if (balls.ballYspeed > 0) {
+                        if (ball.ballYspeed > 0) {
 
-                            balls.ballYspeed *= -1;
+                            ball.ballYspeed *= -1;
                         }
-                    } else if (balls.ballXpos + ballDiameter >= brick.brickXpos &&
-                        balls.ballXpos < brick.brickXpos - ballDiameter / 2 &&
-                        balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos && //hiting left side of bricks
-                        balls.ballXspeed > 0
+                    } else if (ball.ballXpos + ballDiameter >= brick.brickXpos &&
+                        ball.ballXpos < brick.brickXpos - ballDiameter / 2 &&
+                        ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
+                        ball.ballYpos + ballDiameter >= brick.brickYpos && //hiting left side of bricks
+                        ball.ballXspeed > 0
                     ) {
 
                         if (brick.brickStrength < 2) {
@@ -353,14 +354,14 @@
                             brick.brickStrength -= 1;
                         }
 
-                        if (balls.ballXspeed > 0)
-                            balls.ballXspeed *= -1;
+                        if (ball.ballXspeed > 0)
+                            ball.ballXspeed *= -1;
 
-                    } else if (balls.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        balls.ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
-                        balls.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        balls.ballYpos + ballDiameter >= brick.brickYpos && //hiting right side of bricks
-                        balls.ballXspeed < 0
+                    } else if (ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
+                        ball.ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
+                        ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
+                        ball.ballYpos + ballDiameter >= brick.brickYpos && //hiting right side of bricks
+                        ball.ballXspeed < 0
                     ) { // right side of bricks
 
                         if (brick.brickStrength < 2) {
@@ -372,8 +373,8 @@
                         }
 
 
-                        if (balls.ballXspeed < 0)
-                            balls.ballXspeed *= -1;
+                        if (ball.ballXspeed < 0)
+                            ball.ballXspeed *= -1;
 
                     } else {
                         //not sure if i need this or not
@@ -504,63 +505,63 @@
         function ballMove() { //makes the ball move
 
 
-            balls.forEach(function(balls, index, array) { //uese for each so can have muitiple on page at 1 
+            balls.forEach(function(ball, index, array) { //uese for each so can have muitiple on page at 1 
 
-                balls.ballXpos += balls.ballXspeed;
-                balls.ballYpos += balls.ballYspeed;
+                ball.ballXpos += ball.ballXspeed;
+                ball.ballYpos += ball.ballYspeed;
 
-                if (balls.ballXpos + ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
-                    balls.ballXpos = canvas.width - ballDiameter;
+                if (ball.ballXpos + ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
+                    ball.ballXpos = canvas.width - ballDiameter;
                 }
 
-                if (balls.ballXpos < 0) { //stops ball getiing stuck in the left ball
-                    balls.ballXpos = 0;
+                if (ball.ballXpos < 0) { //stops ball getiing stuck in the left ball
+                    ball.ballXpos = 0;
                 }
 
-                if (balls.ballXpos + ballDiameter >= canvas.width) { //right wall bounce
-                    balls.ballXspeed *= -1;
+                if (ball.ballXpos + ballDiameter >= canvas.width) { //right wall bounce
+                    ball.ballXspeed *= -1;
                 }
 
-                if (balls.ballXpos <= 0) { //left wall bounce
-                    balls.ballXspeed *= -1;
+                if (ball.ballXpos <= 0) { //left wall bounce
+                    ball.ballXspeed *= -1;
                 }
 
 
 
-                if (balls.ballYpos <= 0) {
-                    balls.ballYspeed *= -1;
+                if (ball.ballYpos <= 0) {
+                    ball.ballYspeed *= -1;
                 }
 
-                if (balls.ballYpos + ballDiameter >= paddleYpos && //ball collision with paddle
-                    balls.ballYpos < paddleYpos - balls.ballDiameter / 2 &&
-                    balls.ballXpos + ballDiameter > paddleXpos &&
-                    balls.ballXpos < paddleXpos + PADDLE_WIDTH) {
-                    if (balls.ballYspeed > 0) {
+                if (ball.ballYpos + ballDiameter >= paddleYpos && //ball collision with paddle
+                    ball.ballYpos < paddleYpos - ball.ballDiameter / 2 &&
+                    ball.ballXpos + ballDiameter > paddleXpos &&
+                    ball.ballXpos < paddleXpos + PADDLE_WIDTH) {
+                    if (ball.ballYspeed > 0) {
 
-                        balls.ballYspeed *= -1;
-                        balls.ballXspeed = ((balls.ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
+                        ball.ballYspeed *= -1;
+                        ball.ballXspeed = ((ball.ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
 
                     }
 
                 }
 
-                if (balls.ballXpos + ballDiameter >= paddleXpos &&
-                    balls.ballXpos < paddleXpos - ballDiameter / 3 &&
-                    balls.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
-                    balls.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
-                    balls.ballXspeed > 0) {
+                if (ball.ballXpos + ballDiameter >= paddleXpos &&
+                    ball.ballXpos < paddleXpos - ballDiameter / 3 &&
+                    ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
+                    ball.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
+                    ball.ballXspeed > 0) {
 
 
-                    balls.ballXspeed *= -1;
+                    ball.ballXspeed *= -1;
 
                 }
 
-                if (balls.ballXpos <= paddleXpos + PADDLE_WIDTH &&
-                    balls.ballXpos + ballDiameter > paddleXpos + PADDLE_WIDTH + ballDiameter / 3 &&
-                    balls.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
-                    balls.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
-                    balls.ballXspeed < 0) {
-                    balls.ballXspeed *= -1;
+                if (ball.ballXpos <= paddleXpos + PADDLE_WIDTH &&
+                    ball.ballXpos + ballDiameter > paddleXpos + PADDLE_WIDTH + ballDiameter / 3 &&
+                    ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
+                    ball.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
+                    ball.ballXspeed < 0) {
+                    ball.ballXspeed *= -1;
                 }
 
 
@@ -574,42 +575,28 @@
 
 
         function drawBalls() { //draws the ball
-            var ballCounter = 0;
+            var b = 0;
 
-            balls.forEach(function(balls) {
-                ballCounter++;
-                drawImg(ball, balls.ballXpos, balls.ballYpos, balls.ballDiameter, balls.ballDiameter);
+            balls.forEach(function(ball) {
+                b++;
+                drawImg(ball2, ball.ballXpos, ball.ballYpos, ball.ballDiameter, ball.ballDiameter);
 
                 //            drawCircle(ballXpos,,ballDiameter,a,b,ballColor);
 
 
 
-                if (balls.ballYpos + ballDiameter >= canvas.height + 20) { //floor detecion
-                    balls.ballYspeed *= -1;
+                if (ball.ballYpos + ball.ballDiameter >= canvas.height + 20) { //floor detecion
+                    ball.ballYspeed *= -1;
+
+                ////           delete bricks[counter-1];
+                ////       bricks = bricks.filter(item => item !== undefined);
 
 
+                    delete balls[b-1];
+//                    balls = balls.filter(item => item !== undefined);
 
-                    console.log('helllo');
+                    if (ballCount > 0) {
 
-                    if (ballCount > 1) {
-
-
-
-//                        delete ball.ballXspeed;
-                        delete balls.ballYspeed;
-                        delete balls.ballXspeed;
-                        delete balls.ballDiameter;
-                        delete balls.ballXspeed;
-                        delete balls.ballYspeed;
-
-
-
-                        //                            delete balls[ballCounter-1];
-                        //
-                        ////                             delete bricks[counter-1];
-                        ////                            bricks = bricks.filter(item => item !== undefined);
-                        //                            
-                        //                                balls = balls.filter(item => item !== undefined); // the above line makes the ball undefined this removes that 1
                         ballCount -= 1;
                     } else {
                         lifes -= 1;
@@ -621,6 +608,30 @@
                         //                    alert('your time is oger');
                     }
                 }
+
+                //                        delete balls.ballXspeed;
+                //                        delete balls.ballYspeed;
+                //                        delete balls.ballXspeed;
+                //                        delete balls.ballDiameter;
+                //                        delete balls.ballXspeed;
+                //                        delete balls.ballYspeed;
+
+
+
+
+
+
+
+
+                console.log('helllo' + balls);
+
+                //                            delete balls[ballCounter-1];
+                //
+                ////                             delete bricks[counter-1];
+                ////                            bricks = bricks.filter(item => item !== undefined);
+                //                            
+                //                                balls = balls.filter(item => item !== undefined); // the above line makes the ball undefined this removes that 1
+
 
 
 
@@ -804,6 +815,7 @@
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
 </head>
+
 <body></body>
 <script type="text/javascript">
     var gearPage = document.getElementById('GearPage');
