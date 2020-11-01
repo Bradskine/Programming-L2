@@ -13,17 +13,24 @@
 
             document.addEventListener('keydown', keyPressed); // checks for the keys.
             document.addEventListener('keyup', keyReleased);
-
+          
+            
+            document.addEventListener("mousedown", mouseDown);
+            document.addEventListener("mouseup", mouseUp);
+            
+            
             canvas.addEventListener('mousemove', function(evt) {
 
                 var mousePos = mouseAction(evt);
                 mouseX = mousePos.x;
                 mouseY = mousePos.y;
             });
+            
+             
 
         }
 
-
+ 
         var mouseX, mouseY;
 
         var paddleXpos = 0;
@@ -73,11 +80,21 @@
 
         var ball2 = new Image();
         var brickImg = new Image();
+        var b0 = new Image();
+       
+        var pImage = new Image();
+        var gameOverScreen = new Image();
         var powerUp = new Image();
+        
         ball2.src = 'Img/ball.png';
         brickImg.src = 'Img/brick.png';
-
-
+        b0.src = 'Img/b0.png';
+//        b1.src = 'Img/b1.png';
+//        b2.src = 'Img/b2.png';
+//        b3.src = 'Img/b3.png';
+        pImage.src = 'Img/paddle.png';
+        gameOverScreen.src = 'Img/gameOver.png';
+      
 
 
         //bricks variables
@@ -129,11 +146,11 @@
         //        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
 
         function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'grey'); // bg
+            drawImg(b0, 0, 0,canvas.width, canvas.height); // bg
 
             if (gameStart == false) {
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
-                paddleYpos = canvas.height * 0.90;
+                paddleYpos = canvas.height * 0.83;
                 score = 0;
                 if (difficulty == 'easy') { //sets difficutly based on prompts
                     lifes = 5;
@@ -158,7 +175,14 @@
 
             drawScore();
             drawBalls();
-            ballMove();
+            if (ballActive == true) { //this is so ball resets to paddle each level 
+                ballMove();
+
+            } else {
+                nlBall();  
+
+            }
+
             drawBricks();
             updateLevel();
             gameOver();
@@ -171,10 +195,17 @@
 
 
         function updateLevel() { //to create the new levels 
+                
 
-
-
-
+            if(lifes >2) {
+                b0.src = "Img/b3.png"
+            }  else if (lifes ==2) {
+                b0.src = "Img/b2.png"
+            }  else if(lifes ==1) {
+                b0.src = "Img/b1.png";
+            }   else {
+                b0.src = "Img/b0.png";
+            }
 
 
             if (level == 0) {
@@ -208,12 +239,16 @@
                 if (level == 1) { //changes stuff for each levels
                     //                    brickSpace = brickWidth + brickXgap;
 
+                    
                     rowMaxCount = 3;
                     columnMaxCountCount = 5;
 
                     brickStrength = 1
 
                 } else if (level == 2) { // changes variables based on what level it is
+                    balls.forEach(function(ball, index, array) {
+                        
+                    });
                     rowMaxCount = 4;
                     columnMaxCount = 6;
                     brickStrength = 2;
@@ -226,10 +261,22 @@
                     brickStrength = 3
 
                     pushBall();
+                } else if(level==4) {
+                    brickStrength =2;
+                    columnMaxCount = 3;
+                    rowMaxCount = 10; 
+                    
+                    
+                } else if (level ==5) {
+                        rowMaxCount = 3;
+                        columnMaxCount = 10;
+                    brickStrength = 1;
+              
+                    
                 } else {
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
-
+                  
                 }
 
                 newLevel();
@@ -256,6 +303,10 @@
 
         function newLevel() { //fuction for new level
 
+
+            ballActive = false;
+
+
             brickMaxCount = rowMaxCount * columnMaxCount;
 
             while (brickCount < brickMaxCount) {
@@ -266,7 +317,7 @@
 
             balls.forEach(function(balls, index, array) {
                 if (balls.ballYspeed > 0) {
-                    balls.ballYspeed = ballBaseSpeed + (level * 2);
+                    balls.ballYspeed = ballBaseSpeed + (level * 2); 
                 } else {
                     balls.ballYspeed = -(ballBaseSpeed + (level * 2));
                 }
@@ -275,8 +326,10 @@
             });
 
             level += 1;
-        }
+        }   // end of newLevel
 
+        
+        
         function drawBricks() { //to draw the brikcs
 
 
@@ -300,10 +353,10 @@
 
 
                     if (brick.brickYpos + brick.brickHeight >= ball.ballYpos &&
-                        ball.ballYpos + ballDiameter >= brick.brickYpos + brick.brickHeight + ballDiameter / 2 && //possibly plus 4
-                        ball.ballXpos + ballDiameter >= brick.brickXpos &&
+                        ball.ballYpos + ball.ballDiameter >= brick.brickYpos + brick.brickHeight + ball.ballDiameter / 2 && //possibly plus 4
+                        ball.ballXpos + ball.ballDiameter >= brick.brickXpos &&
                         ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        ball.ballYspeed < 0 // so ball doesn't hit corner and continue going
+                        ball.ballYspeed < 0 // so ball doesn't hit cbaorner and continue going
 
                     ) { //hitting the bottom of bricks
 
@@ -321,9 +374,9 @@
 
                         }
 
-                    } else if (ball.ballYpos <= brick.brickYpos - ballDiameter / 2 && //possibly plus 4
-                        brick.brickYpos <= ball.ballYpos + ballDiameter &&
-                        ball.ballXpos + ballDiameter >= brick.brickXpos &&
+                    } else if (ball.ballYpos <= brick.brickYpos - ball.ballDiameter / 2 && //possibly plus 4
+                        brick.brickYpos <= ball.ballYpos + ball.ballDiameter &&
+                        ball.ballXpos + ball.ballDiameter >= brick.brickXpos &&
                         ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
                         ball.ballYspeed > 0) { //hitting top of bricks
 
@@ -339,10 +392,10 @@
 
                             ball.ballYspeed *= -1;
                         }
-                    } else if (ball.ballXpos + ballDiameter >= brick.brickXpos &&
-                        ball.ballXpos < brick.brickXpos - ballDiameter / 2 &&
+                    } else if (ball.ballXpos + ball.ballDiameter >= brick.brickXpos &&
+                        ball.ballXpos < brick.brickXpos - ball.ballDiameter / 2 &&
                         ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        ball.ballYpos + ballDiameter >= brick.brickYpos && //hiting left side of bricks
+                        ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting left side of bricks
                         ball.ballXspeed > 0
                     ) {
 
@@ -354,13 +407,13 @@
                             brick.brickStrength -= 1;
                         }
 
-                        if (ball.ballXspeed > 0)
+                        if (ball.ballXspeed > 0) {
                             ball.ballXspeed *= -1;
-
+                        }
                     } else if (ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                        ball.ballXpos + ballDiameter > brick.brickXpos + brick.brickWidth + ballDiameter / 2 &&
+                        ball.ballXpos + ball.ballDiameter > brick.brickXpos + brick.brickWidth + ball.ballDiameter / 2 &&
                         ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                        ball.ballYpos + ballDiameter >= brick.brickYpos && //hiting right side of bricks
+                        ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting right side of bricks
                         ball.ballXspeed < 0
                     ) { // right side of bricks
 
@@ -428,7 +481,7 @@
             brickHeight = canvas.height * 0.55 / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
-            if (level >= 4) {
+            if (level >= 5) {
                 rand();
             }
             if (brickStrength == 1) {
@@ -450,7 +503,7 @@
                 brickHeight: brickHeight
             }
 
-            console.log('newbrick');
+           
             brickCount += 1;
             return newBrick;
 
@@ -510,15 +563,15 @@
                 ball.ballXpos += ball.ballXspeed;
                 ball.ballYpos += ball.ballYspeed;
 
-                if (ball.ballXpos + ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
-                    ball.ballXpos = canvas.width - ballDiameter;
+                if (ball.ballXpos + ball.ballDiameter > canvas.width) { //stop the ball geting stuck in the right wall
+                    ball.ballXpos = canvas.width - ball.ballDiameter;
                 }
 
                 if (ball.ballXpos < 0) { //stops ball getiing stuck in the left ball
                     ball.ballXpos = 0;
                 }
 
-                if (ball.ballXpos + ballDiameter >= canvas.width) { //right wall bounce
+                if (ball.ballXpos + ball.ballDiameter >= canvas.width) { //right wall bounce
                     ball.ballXspeed *= -1;
                 }
 
@@ -532,23 +585,23 @@
                     ball.ballYspeed *= -1;
                 }
 
-                if (ball.ballYpos + ballDiameter >= paddleYpos && //ball collision with paddle
+                if (ball.ballYpos + ball.ballDiameter >= paddleYpos && //ball collision with paddle
                     ball.ballYpos < paddleYpos - ball.ballDiameter / 2 &&
-                    ball.ballXpos + ballDiameter > paddleXpos &&
+                    ball.ballXpos + ball.ballDiameter > paddleXpos &&
                     ball.ballXpos < paddleXpos + PADDLE_WIDTH) {
                     if (ball.ballYspeed > 0) {
 
                         ball.ballYspeed *= -1;
-                        ball.ballXspeed = ((ball.ballXpos + ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
+                        ball.ballXspeed = ((ball.ballXpos + ball.ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
 
                     }
 
                 }
 
-                if (ball.ballXpos + ballDiameter >= paddleXpos &&
-                    ball.ballXpos < paddleXpos - ballDiameter / 3 &&
+                if (ball.ballXpos + ball.ballDiameter >= paddleXpos &&
+                    ball.ballXpos < paddleXpos - ball.ballDiameter / 3 &&
                     ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
-                    ball.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
+                    ball.ballYpos + ball.ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
                     ball.ballXspeed > 0) {
 
 
@@ -557,9 +610,9 @@
                 }
 
                 if (ball.ballXpos <= paddleXpos + PADDLE_WIDTH &&
-                    ball.ballXpos + ballDiameter > paddleXpos + PADDLE_WIDTH + ballDiameter / 3 &&
+                    ball.ballXpos + ball.ballDiameter > paddleXpos + PADDLE_WIDTH + ball.ballDiameter / 3 &&
                     ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
-                    ball.ballYpos + ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
+                    ball.ballYpos + ball.ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
                     ball.ballXspeed < 0) {
                     ball.ballXspeed *= -1;
                 }
@@ -585,18 +638,18 @@
 
 
 
-                if (ball.ballYpos + ball.ballDiameter >= canvas.height + 20) { //floor detecion
+                if (ball.ballYpos + ball.ballDiameter >= canvas.height* 0.90) { //floor detecion
                     ball.ballYspeed *= -1;
 
-                ////           delete bricks[counter-1];
-                ////       bricks = bricks.filter(item => item !== undefined);
+                    ////           delete bricks[counter-1];
+                    ////       bricks = bricks.filter(item => item !== undefined);
 
 
-                    delete balls[b-1];
-//                    balls = balls.filter(item => item !== undefined);
 
-                    if (ballCount > 0) {
 
+                    if (ballCount > 1) {
+                        delete balls[b - 1];
+                        balls = balls.filter(item => item !== undefined);
                         ballCount -= 1;
                     } else {
                         lifes -= 1;
@@ -609,28 +662,6 @@
                     }
                 }
 
-                //                        delete balls.ballXspeed;
-                //                        delete balls.ballYspeed;
-                //                        delete balls.ballXspeed;
-                //                        delete balls.ballDiameter;
-                //                        delete balls.ballXspeed;
-                //                        delete balls.ballYspeed;
-
-
-
-
-
-
-
-
-                console.log('helllo' + balls);
-
-                //                            delete balls[ballCounter-1];
-                //
-                ////                             delete bricks[counter-1];
-                ////                            bricks = bricks.filter(item => item !== undefined);
-                //                            
-                //                                balls = balls.filter(item => item !== undefined); // the above line makes the ball undefined this removes that 1
 
 
 
@@ -661,34 +692,44 @@
             }
 
             ballCount += 1;
-            console.log('newball')
+           
             return newBall;
         }
 
+        function nlBall() {
+            balls.forEach(function(ball) {
+                
+//                ballCount = 0;
+                          //might make a reset ball funciotn if i end up with more custimizations
+                          
+                    ball.ballXpos = paddleXpos+ PADDLE_WIDTH/2  - ball.ballDiameter /2;          
+                    ball.ballYpos = paddleYpos - ball.ballDiameter; 
+                
+                
+                
+                          
+                          
+          });
+        }
 
-
+        function mouseDown() {
+            
+        }
+        
+        function mouseUp() {
+                  ballActive = true;
+        }
 
         function drawPaddle() { //draws the paddle based on variables that can be changed and are set at start
-            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, paddleColor);
+//            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, paddleColor);
+            
+            drawImg(pImage,paddleXpos,paddleYpos,PADDLE_WIDTH,PADDLE_HEIGHT);
         }
 
         function paddleMove() {
 
 
-            //            if (paddleXpos > canvas.width * 0.05) {
-            //                if (leftKeyPressed == true) {
-            //                    paddleXpos -= paddleXspeed;
-            //                }
-            //            }
-            //
-            //
-            //
-            //            if (paddleXpos + PADDLE_WIDTH < canvas.width * 0.95) {
-            //                if (rightKeyPressed == true) {
-            //                    paddleXpos += paddleXspeed;
-            //                }
-            //            }
-            //        }
+
 
             if (paddleXpos >= canvas.width * 0.05 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.95) {
 
@@ -714,13 +755,6 @@
 
 
         }
-
-
-
-
-
-
-
 
 
         function keyReleased(evt) { // to check if keys are not pressed
@@ -763,6 +797,13 @@
 
 
         }
+        
+        
+        
+        
+   
+        
+        
 
         function mouseAction(evt) {
 
@@ -772,14 +813,15 @@
 
             mouseX = evt.clientX - rect.left - root.scrollLeft;
 
-            mouseY = evt.clientY - rect.top - root.scrollTop;
+            mouseY = evt.clientY - rect.top - root.scrollTop;   
 
             return {
 
                 x: mouseX,
 
                 y: mouseY
-
+                
+                
             }
 
         }
