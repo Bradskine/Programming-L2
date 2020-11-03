@@ -118,7 +118,7 @@
 
 
         //powerup variables 
-        var powerUp = ['mBall', 'pBall'];
+        
         var powerUpCount = 0;
         var pUpActive = false;
         var pUpXpos = 0;
@@ -273,7 +273,7 @@
                     columnMaxCount = 7;
                     brickStrength = 3
 
-                    pushBall();
+                 
                 } else if (level == 4) {
                     brickStrength = 2;
                     columnMaxCount = 3;
@@ -378,18 +378,19 @@
                             delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined); // deltes brick all lowers brick strength if brick can take more than one hit
                             if (powerUpCount == 0) {
+                                
                                 var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a>69&&a<80) {
-                                    pUpActive
-                                    pUpXpos = brick.brickXpos + brick.brickWidth /4;
+                                if (a > 0 && a < 10) {
+                                   
+                                    pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
-                                    pUpWidth = brick.brickWidth /2;
-                                    pUpHeight = brick.brickHeight /2;
-                                     pUpActive = true;
-                                        powerUpCount += 1;
+                                    pUpWidth = brick.brickWidth / 2;
+                                    pUpHeight = brick.brickHeight / 2;
+                                    pUpActive = true;
+                                    powerUpCount += 1;
                                 }
 
-                            }  //end of new powerUP
+                            } //end of new powerUP
                         } else {
                             brick.brickStrength -= 1;
                         }
@@ -411,93 +412,93 @@
                             bricks = bricks.filter(item => item !== undefined);
                             if (powerUpCount == 0) {
                                 var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a>69&&a<80) {
-                                    pUpActive
-                                    pUpXpos = brick.brickXpos + brick.brickWidth /4;
+                                if (a > 0 && a < 10) {
+                                  
+                                    pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
-                                    pUpWidth = brick.brickWidth /2;
-                                    pUpHeight = brick.brickHeight /2;
-                                     pUpActive = true;
-                                        powerUpCount += 1;
+                                    pUpWidth = brick.brickWidth / 2;
+                                    pUpHeight = brick.brickHeight / 2;
+                                    pUpActive = true;
+                                    powerUpCount += 1;
                                 }
 
-                            }  //end of new powerUP
-                            } else {
-                                brick.brickStrength -= 1;
-                            }
+                            } //end of new powerUP
+                        } else {
+                            brick.brickStrength -= 1;
+                        }
 
-                            if (ball.ballYspeed > 0) {
+                        if (ball.ballYspeed > 0) {
 
-                                ball.ballYspeed *= -1;
-                            }
-                        } else if (ball.ballXpos + ball.ballDiameter >= brick.brickXpos &&
-                            ball.ballXpos < brick.brickXpos - ball.ballDiameter / 2 &&
-                            ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                            ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting left side of bricks
-                            ball.ballXspeed > 0
-                        ) {
+                            ball.ballYspeed *= -1;
+                        }
+                    } else if (ball.ballXpos + ball.ballDiameter >= brick.brickXpos &&
+                        ball.ballXpos < brick.brickXpos - ball.ballDiameter / 2 &&
+                        ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
+                        ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting left side of bricks
+                        ball.ballXspeed > 0
+                    ) {
 
-                            if (brick.brickStrength < 2) {
-                                brickCount -= 1;
-                                delete bricks[counter - 1];
-                                bricks = bricks.filter(item => item !== undefined);
-                                if (powerUpCount == 0) {
+                        if (brick.brickStrength < 2) {
+                            brickCount -= 1;
+                            delete bricks[counter - 1];
+                            bricks = bricks.filter(item => item !== undefined);
+                            if (powerUpCount == 0) {
                                 var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a>69&&a<80) {
-                                    pUpActive
-                                    pUpXpos = brick.brickXpos + brick.brickWidth /4;
+                                if (a > 0 && a < 10) {
+                                   
+                                    pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
-                                    pUpWidth = brick.brickWidth /2;
-                                    pUpHeight = brick.brickHeight /2;
-                                     pUpActive = true;
-                                        powerUpCount += 1;
+                                    pUpWidth = brick.brickWidth / 2;
+                                    pUpHeight = brick.brickHeight / 2;
+                                    pUpActive = true;
+                                    powerUpCount += 1;
                                 }
 
-                            }  //end of new powerUP
-
-                            } else {
-                                brick.brickStrength -= 1;
-                            }
-
-                            if (ball.ballXspeed > 0) {
-                                ball.ballXspeed *= -1;
-                            }
-                        } else if (ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
-                            ball.ballXpos + ball.ballDiameter > brick.brickXpos + brick.brickWidth + ball.ballDiameter / 2 &&
-                            ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
-                            ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting right side of bricks
-                            ball.ballXspeed < 0
-                        ) { // right side of bricks
-
-                            if (brick.brickStrength < 2) {
-                                brickCount -= 1;
-                                delete bricks[counter - 1];
-                                bricks = bricks.filter(item => item !== undefined);
-                                if (powerUpCount == 0) {
-                                var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a>69&&a<80) {
-                                    pUpActive
-                                    pUpXpos = brick.brickXpos + brick.brickWidth /4;
-                                    pUpYpos = brick.brickYpos + brick.brickYpos / 4;
-                                    pUpWidth = brick.brickWidth /2;
-                                    pUpHeight = brick.brickHeight /2;
-                                     pUpActive = true;
-                                        powerUpCount += 1;
-                                }
-
-                            }  //end of new powerUP
-                            } else {
-                                brick.brickStrength -= 1;
-                            }
-
-
-                            if (ball.ballXspeed < 0)
-                                ball.ballXspeed *= -1;
+                            } //end of new powerUP
 
                         } else {
-                            //not sure if i need this or not
+                            brick.brickStrength -= 1;
                         }
-                    
+
+                        if (ball.ballXspeed > 0) {
+                            ball.ballXspeed *= -1;
+                        }
+                    } else if (ball.ballXpos <= brick.brickXpos + brick.brickWidth &&
+                        ball.ballXpos + ball.ballDiameter > brick.brickXpos + brick.brickWidth + ball.ballDiameter / 2 &&
+                        ball.ballYpos <= brick.brickYpos + brick.brickHeight &&
+                        ball.ballYpos + ball.ballDiameter >= brick.brickYpos && //hiting right side of bricks
+                        ball.ballXspeed < 0
+                    ) { // right side of bricks
+
+                        if (brick.brickStrength < 2) {
+                            brickCount -= 1;
+                            delete bricks[counter - 1];
+                            bricks = bricks.filter(item => item !== undefined);
+                            if (powerUpCount == 0) {
+                                var a = Math.floor(Math.random(100 - 5) + 5);
+                                if (a > 0 && a < 10) {
+                                    
+                                    pUpXpos = brick.brickXpos + brick.brickWidth / 4;
+                                    pUpYpos = brick.brickYpos + brick.brickYpos / 4;
+                                    pUpWidth = brick.brickWidth / 2;
+                                    pUpHeight = brick.brickHeight / 2;
+                                    pUpActive = true;
+                                    powerUpCount += 1;
+                                }
+
+                            } //end of new powerUP
+                        } else {
+                            brick.brickStrength -= 1;
+                        }
+
+
+                        if (ball.ballXspeed < 0)
+                            ball.ballXspeed *= -1;
+
+                    } else {
+                        //not sure if i need this or not
+                    }
+
                 });
             });
 
@@ -506,15 +507,67 @@
         }
 
 
-
+            
 
         function drawPowerUp() {
             drawImg(powerUpImg, pUpXpos, pUpYpos, pUpWidth, pUpHeight);
             pUpYpos += powerUpYspeed;
+
+            if (pUpYpos + pUpHeight >= paddleYpos && //ball collision with paddle
+                pUpYpos < paddleYpos - pUpHeight / 2 &&
+                pUpXpos + pUpWidth > paddleXpos &&
+                pUpXpos < paddleXpos + PADDLE_WIDTH) {
+                
+                activatePup();
+                
+            }
+//  else if (pUpXpos + pUpWidth >= paddleXpos &&
+//                pUpXpos < paddleXpos - pUpWidth / 3 &&
+//                pUpYpos <= paddleYpos + PADDLE_HEIGHT &&
+//                pUpYpos + pUpHeight >= paddleYpos + PADDLE_HEIGHT) {
+//
+//activatePup();
+//
+//
+//            } else if (pUpXpos <= paddleXpos + PADDLE_WIDTH &&
+//                pUpXpos + pUpWidth > paddleXpos + PADDLE_WIDTH + pUpWidth / 3 &&
+//                pUpYpos <= paddleYpos + PADDLE_HEIGHT &&
+//                pUpYpos + pUpWidth >= paddleYpos + PADDLE_HEIGHT / 2) {
+//
+//  activatePup();
+//            
+//            
+//            
+//            } else {
+//                //nothing;
+//            }
+            
+            
+            if (pUpYpos + pUpHeight >= canvas.height * 0.90) { 
+              powerUpCount -=1;
+             pUpActive = false;
+         
         }
 
-
-
+        }
+         function activatePup() {
+             balls.forEach(function(ball, index, array) {
+                pUpActive = false;
+               powerUpCount -= 1;
+                 console.log('heello');
+               if (Math.random() < 0.5 && ballMaxCount<2) {
+                   ballMaxCount += 1;
+                    pushBall();
+                   // might need to make it so it so pusbll fucntion allways runs so i can just change max count
+               }  else {
+                      
+                      ball.ballDiameter += 30;
+               }
+               });
+               
+               }
+         
+        
 
         function addBrick() {
 
@@ -668,9 +721,7 @@
 
                     }
 
-                }
-
-                if (ball.ballXpos + ball.ballDiameter >= paddleXpos &&
+                } else if (ball.ballXpos + ball.ballDiameter >= paddleXpos &&
                     ball.ballXpos < paddleXpos - ball.ballDiameter / 3 &&
                     ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
                     ball.ballYpos + ball.ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting left side of paddle
@@ -679,14 +730,14 @@
 
                     ball.ballXspeed *= -1;
 
-                }
-
-                if (ball.ballXpos <= paddleXpos + PADDLE_WIDTH &&
+                } else if (ball.ballXpos <= paddleXpos + PADDLE_WIDTH &&
                     ball.ballXpos + ball.ballDiameter > paddleXpos + PADDLE_WIDTH + ball.ballDiameter / 3 &&
                     ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
                     ball.ballYpos + ball.ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
                     ball.ballXspeed < 0) {
                     ball.ballXspeed *= -1;
+                } else {
+                    //nothing;
                 }
 
 
@@ -723,6 +774,10 @@
                         delete balls[b - 1];
                         balls = balls.filter(item => item !== undefined);
                         ballCount -= 1;
+                        if (ballMaxCount>1) {
+                            ballMaxCount -= 1;
+                        }
+                        
                     } else {
                         lifes -= 1;
                     }
@@ -929,7 +984,6 @@
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
     <meta name="Robots" content="NOINDEX " />
 </head>
-
 <body></body>
 <script type="text/javascript">
     var gearPage = document.getElementById('GearPage');
