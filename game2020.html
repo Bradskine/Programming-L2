@@ -58,7 +58,7 @@
         var ballBaseSpeed = 5
         var ballColor = 'red';
         var ballActive = false;
-
+        var ballMaxSize = 80;
 
         //for arrow and wasd keys 
         const WKEY = 87;
@@ -107,8 +107,11 @@
         var brickXpos = 0;
         var brickYpos = 0;
         var brickStrength = 0;
+        var tBrickHeight = 0.5;
+        var tBrickWidth = 1;
 
         var brickTopGap = 50;
+        var brickLeftGap = 0;
         var brickXgap = 7;
         var brickYgap = 2;
         var rowCount = 1;
@@ -126,7 +129,7 @@
         var pUpWidth = 0;
         var pUpHeight = 0;
         var powerUpYspeed = 3;
-
+        var powerUpChance = 0;
         // general game variables
         var score = 0;
         var lifes = 3;
@@ -199,7 +202,6 @@
 
 
 
-
         }
 
 
@@ -223,9 +225,10 @@
 
             if (level == 0) {
                 ballMaxCount = 1;
-
+powerUpChance = 0.23;
                 pushBall();
                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
+                brickLeftGap = 0;
                 brickXgap = 7;
                 brickYgap = 2;
 
@@ -241,6 +244,7 @@
                 //                newLevel();
 
                 newLevel();
+             
             }
 
 
@@ -251,7 +255,7 @@
 
                 if (level == 1) { //changes stuff for each levels
                     //                    brickSpace = brickWidth + brickXgap;
-
+                    
 
                     rowMaxCount = 3;
                     columnMaxCountCount = 5;
@@ -265,6 +269,8 @@
                     rowMaxCount = 4;
                     columnMaxCount = 6;
                     brickStrength = 2;
+                       tBrickHeight = 0.6;
+            tBrickWidth = 1;
                 } else if (level == 3) {
 
                     brickXgap = 2;
@@ -272,24 +278,30 @@
                     rowMaxCount = 5;
                     columnMaxCount = 7;
                     brickStrength = 3
-
-                 
+ powerUpChance = 0.15;
+              
                 } else if (level == 4) {
                     brickStrength = 2;
                     columnMaxCount = 3;
                     rowMaxCount = 10;
-
-
+                           tBrickHeight = 0.6;
+                       tBrickWidth = 0.7;
+                       brickLeftGap = canvas.width*0.15;
+   powerUpChance = 0.1;
                 } else if (level == 5) {
                     rowMaxCount = 3;
                     columnMaxCount = 10;
                     brickStrength = 1;
 
-
+            tBrickHeight = 0.4;
+            tBrickWidth = 1;
+                    
                 } else {
+                     powerUpChance = 0.08;
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
-
+   tBrickHeight = 0.6;
+            tBrickWidth = 1;
                 }
 
                 newLevel();
@@ -379,8 +391,8 @@
                             bricks = bricks.filter(item => item !== undefined); // deltes brick all lowers brick strength if brick can take more than one hit
                             if (powerUpCount == 0) {
                                 
-                                var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a > 0 && a < 10) {
+                                var a = Math.random();
+                                if (a < powerUpChance) {
                                    
                                     pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
@@ -388,6 +400,7 @@
                                     pUpHeight = brick.brickHeight / 2;
                                     pUpActive = true;
                                     powerUpCount += 1;
+                                  
                                 }
 
                             } //end of new powerUP
@@ -411,8 +424,8 @@
                             delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                             if (powerUpCount == 0) {
-                                var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a > 0 && a < 10) {
+                                var a = Math.random();
+                                if (a < powerUpChance) {
                                   
                                     pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
@@ -420,6 +433,7 @@
                                     pUpHeight = brick.brickHeight / 2;
                                     pUpActive = true;
                                     powerUpCount += 1;
+                                   
                                 }
 
                             } //end of new powerUP
@@ -443,8 +457,8 @@
                             delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                             if (powerUpCount == 0) {
-                                var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a > 0 && a < 10) {
+                               var a = Math.random();
+                                if (a < powerUpChance) {
                                    
                                     pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
@@ -452,6 +466,7 @@
                                     pUpHeight = brick.brickHeight / 2;
                                     pUpActive = true;
                                     powerUpCount += 1;
+                                   
                                 }
 
                             } //end of new powerUP
@@ -475,8 +490,8 @@
                             delete bricks[counter - 1];
                             bricks = bricks.filter(item => item !== undefined);
                             if (powerUpCount == 0) {
-                                var a = Math.floor(Math.random(100 - 5) + 5);
-                                if (a > 0 && a < 10) {
+                                var a = Math.random();
+                                if (a < powerUpChance) {
                                     
                                     pUpXpos = brick.brickXpos + brick.brickWidth / 4;
                                     pUpYpos = brick.brickYpos + brick.brickYpos / 4;
@@ -484,6 +499,7 @@
                                     pUpHeight = brick.brickHeight / 2;
                                     pUpActive = true;
                                     powerUpCount += 1;
+                                   
                                 }
 
                             } //end of new powerUP
@@ -511,15 +527,17 @@
 
         function drawPowerUp() {
             drawImg(powerUpImg, pUpXpos, pUpYpos, pUpWidth, pUpHeight);
-            pUpYpos += powerUpYspeed;
-
+            if(ballActive == true) {
+            pUpYpos += powerUpYspeed;  //makes powerup move when level is running
+  }
             if (pUpYpos + pUpHeight >= paddleYpos && //ball collision with paddle
                 pUpYpos < paddleYpos - pUpHeight / 2 &&
                 pUpXpos + pUpWidth > paddleXpos &&
-                pUpXpos < paddleXpos + PADDLE_WIDTH) {
-                
+                pUpXpos < paddleXpos + PADDLE_WIDTH &&
+               pUpActive == true) {
+              
                 activatePup();
-                
+                  pUpActive = false;
             }
 //  else if (pUpXpos + pUpWidth >= paddleXpos &&
 //                pUpXpos < paddleXpos - pUpWidth / 3 &&
@@ -546,23 +564,42 @@
             if (pUpYpos + pUpHeight >= canvas.height * 0.90) { 
               powerUpCount -=1;
              pUpActive = false;
-         
+      
         }
 
         }
          function activatePup() {
-             balls.forEach(function(ball, index, array) {
+            
                 pUpActive = false;
                powerUpCount -= 1;
                  console.log('heello');
-               if (Math.random() < 0.5 && ballMaxCount<2) {
+              balls.forEach(function(ball) {
+               if (Math.random() < 0.3 && ballMaxCount<3) {
                    ballMaxCount += 1;
                     pushBall();
                    // might need to make it so it so pusbll fucntion allways runs so i can just change max count
-               }  else {
+               }  else if(Math.random() < 0.1){
+                          
+                          lifes +=1;
+                          
+                          } else if (Math.random()<0.01) {
+                              alert('lucky you here are 20 lives');
+                          } else {
+                                
+                              
+                              if(ball.ballDiameter == 30) {
+                                    ball.ballDiameter += 20;
+                              }   else if (ball.ballDiameter< ballMaxSize)  {
+                                  ball.ballDiameter *= 1.20;
+                              }  else {
+                                  lifes +=1;
+                              }
+                              
+                              
+                          }
                       
-                      ball.ballDiameter += 30;
-               }
+                    
+               
                });
                
                }
@@ -596,14 +633,14 @@
             columnCount = brickCount - (columnMaxCount * (rowCount)); // chamges columnCount varibale so when new brick is added it knows where to put it.
 
 
-            brickXpos = (canvas.width * (1 / columnMaxCount)) * columnCount;
+            brickXpos = (canvas.width * (1 / columnMaxCount)) * columnCount + brickLeftGap;
 
             brickYpos = brickTopGap + brickYgap * rowCount + brickHeight * rowCount;
 
 
-            brickWidth = canvas.width / columnMaxCount - brickXgap;
+            brickWidth = canvas.width * tBrickWidth / columnMaxCount - brickXgap;
 
-            brickHeight = canvas.height * 0.55 / rowMaxCount - brickYgap;
+            brickHeight = canvas.height * tBrickHeight / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
             if (level >= 5) {
@@ -695,7 +732,9 @@
                 if (ball.ballXpos < 0) { //stops ball getiing stuck in the left ball
                     ball.ballXpos = 0;
                 }
-
+ 
+                
+                
                 if (ball.ballXpos + ball.ballDiameter >= canvas.width) { //right wall bounce
                     ball.ballXspeed *= -1;
                 }
@@ -704,12 +743,16 @@
                     ball.ballXspeed *= -1;
                 }
 
-
+  if (ball.ballYpos<0) {
+      ball.ballYpos = 0;
+  }   //stops ball getting stuck in top of screen
 
                 if (ball.ballYpos <= 0) {
                     ball.ballYspeed *= -1;
                 }
-
+        
+                
+                
                 if (ball.ballYpos + ball.ballDiameter >= paddleYpos && //ball collision with paddle
                     ball.ballYpos < paddleYpos - ball.ballDiameter / 2 &&
                     ball.ballXpos + ball.ballDiameter > paddleXpos &&
@@ -791,7 +834,9 @@
 
 
 
-
+  if (ball.ballYpos + ball.ballDiameter > canvas.height * 0.9) {
+           ball.ballYpos = canvas.height * 0.9 - ball.ballDiameter;
+  }
 
             });
         }
@@ -802,8 +847,8 @@
 
 
 
-            ballXpos = 200;
-            ballYpos = 200;
+              ballXpos = paddleXpos + PADDLE_WIDTH / 2 -30 / 2;
+               ballYpos = paddleYpos - 30;
             ballYspeed = ballYspeed;
             ballXspeed = Math.random() * (18 - 7 + 7);
             ballDiameter = 30;
