@@ -1,7 +1,7 @@
 <!doctype html>
 
 <body>
-    <canvas id="gameCanvas" width="700" height="600"></canvas>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
         var canvas, ctx;
 
@@ -35,7 +35,7 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 90;
+        const PADDLE_WIDTH = 110;
         const PADDLE_HEIGHT = 20;
         var paddleXspeed = 10;
         var paddleYspeed = 5;
@@ -54,8 +54,8 @@
         var ballMaxCount = 0;
         var a = 0;
         var b = 2 * Math.PI;
-        var ballYspeed = 5;
-        var ballBaseSpeed = 5
+        var ballYspeed = 0;
+        var ballBaseSpeed = 0;
         var ballColor = 'red';
         var ballActive = false;
         var ballMaxSize = 80;
@@ -65,6 +65,8 @@
         const AKEY = 65;
         const SKEY = 83;
         const DKEY = 68;
+        const RKEY = 82;
+        var rKeyPressed = false;
         const LEFT_KEY = 37;
         const TOP_KEY = 38;
         const RIGHT_KEY = 39;
@@ -73,7 +75,7 @@
         var rightKeyPressed = false;
         var leftKeyPressed = false;
         var downKeyPressed = false;
-
+      
 
         //images 
 
@@ -107,7 +109,7 @@
         var brickXpos = 0;
         var brickYpos = 0;
         var brickStrength = 0;
-        var tBrickHeight = 0.5;
+        var tBrickHeight = 0.28;
         var tBrickWidth = 1;
 
         var brickTopGap = 50;
@@ -135,23 +137,23 @@
         var lifes = 3;
         var level = 0;
         var gameActive = false;
-        var difficulty = 'normal'
+        var difficulty = 'normal';
 
         //        var name = prompt("What's your name") // ask for the name
         //        while (name.length == 0 || name == 'null') { // if the names lenght is 0 or the player clicks cancel it will keep asking until they type a valid name.
         //            alert("Your name must be more than one character");
         //            name = prompt("What's your name?");
         //        }
-        //        var difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard", 'Normal') // ask for difficulty.
-        //        if (difficulty == null) { // checks they did'nt click null because if I check in next loop it cannot read .toLowerCase() of null.
-        //            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //        }
-        //        while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'normal' && difficulty.toLowerCase() !== 'hard') { //makes sure they typre hard, normal or easy. Uses .toLowerCase so it doesn't matter if the user uses capital letters or not.
-        //            difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //            if (difficulty == null) {
-        //                difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard")
-        //            }
-        //        }
+                var difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard", 'Normal'); // ask for difficulty.
+                if (difficulty == null) { // checks they did'nt click null because if I check in next loop it cannot read .toLowerCase() of null.
+                    difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard");
+                }
+                while (difficulty.toLowerCase() !== 'easy' && difficulty.toLowerCase() !== 'normal' && difficulty.toLowerCase() !== 'hard') { //makes sure they typre hard, normal or easy. Uses .toLowerCase so it doesn't matter if the user uses capital letters or not.
+                    difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard");
+                    if (difficulty == null) {
+                        difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard");
+                    }
+                }
         //        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
 
         function mainloop() {
@@ -163,18 +165,26 @@
                 score = 0;
                 if (difficulty == 'easy') { //sets difficutly based on prompts
                     lifes = 5;
+                    ballBaseSpeed = 3;
+                   ballYspeed = 3;
                 } else if (difficulty == 'normal') {
                     lifes = 3;
+                    ballBaseSpeed = 5;
+                     ballYspeed = 5;
                 } else {
-                    lifes = 1
+                    lifes = 1;
+                    ballBaseSpeed = 7;
+                    ballBaseSpeed = 7;
                 }
 
                 gameStart = true;
-
+                gameActive = true;
 
 
             }
 
+if(gameActive==true) {
+    
 
 
             drawPaddle(); //funciotns to create draw and make paddle move
@@ -192,7 +202,8 @@
 
             drawBricks();
             updateLevel();
-            gameOver();
+           
+     gameOver();
 
 
 
@@ -200,8 +211,9 @@
                 drawPowerUp();
             }
 
-
-
+}
+             gameOver();
+            checkRestart();
         }
 
 
@@ -269,7 +281,7 @@ powerUpChance = 0.23;
                     rowMaxCount = 4;
                     columnMaxCount = 6;
                     brickStrength = 2;
-                       tBrickHeight = 0.6;
+                       tBrickHeight = 0.5;
             tBrickWidth = 1;
                 } else if (level == 3) {
 
@@ -712,11 +724,29 @@ powerUpChance = 0.23;
 
         function gameOver() {
             if (lifes < 1) {
-                //                alert('Game Over')
+                gameActive =false;
+                drawImg(gameOverScreen,0,0,canvas.width,canvas.height);
 
             }
         }
 
+         function checkRestart() {
+        
+                 if(rKeyPressed == true) {
+                    
+                         gameStart = false;
+                        level = 0;
+                     bricks = [];
+               brickCount = 0;
+                 
+                     }
+                 }
+
+         
+        
+        
+        
+        
         function ballMove() { //makes the ball move
 
 
@@ -849,7 +879,7 @@ powerUpChance = 0.23;
 
               ballXpos = paddleXpos + PADDLE_WIDTH / 2 -30 / 2;
                ballYpos = paddleYpos - 30;
-            ballYspeed = ballYspeed;
+            ballYspeed = ballBaseSpeed + (level * 2);
             ballXspeed = Math.random() * (18 - 7 + 7);
             ballDiameter = 30;
 
@@ -903,7 +933,7 @@ powerUpChance = 0.23;
 
 
 
-            if (paddleXpos >= canvas.width * 0.05 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.95) {
+            if (paddleXpos >= canvas.width * 0.02 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.98) {
 
 
                 if (isNaN(mouseX)) {
@@ -914,11 +944,11 @@ powerUpChance = 0.23;
 
 
 
-                if (paddleXpos < canvas.width * 0.05) {
-                    paddleXpos = canvas.width * 0.05;
+                if (paddleXpos < canvas.width * 0.02) {
+                    paddleXpos = canvas.width * 0.02;
                 }
-                if (paddleXpos + PADDLE_WIDTH > canvas.width * 0.95) {
-                    paddleXpos = canvas.width * 0.95 - PADDLE_WIDTH;
+                if (paddleXpos + PADDLE_WIDTH > canvas.width * 0.98) {
+                    paddleXpos = canvas.width * 0.98 - PADDLE_WIDTH;
                 }
 
 
@@ -930,51 +960,18 @@ powerUpChance = 0.23;
 
 
         function keyReleased(evt) { // to check if keys are not pressed
-            if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
-                upKeyPressed = false;
+
+            if(evt.keyCode == RKEY) {
+                rKeyPressed = false;
             }
-
-            if (evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
-                leftKeyPressed = false;
-            }
-
-            if (evt.keyCode == SKEY || evt.keyCode == BOT_KEY) {
-                downKeyPressed = false;
-            }
-
-            if (evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = false;
-            }
-
-
         }
 
         function keyPressed(evt) { // to check if keys are pressed
-            if (evt.keyCode == WKEY || evt.keyCode == TOP_KEY) {
-                upKeyPressed = true;
-            }
+             if(evt.keyCode == RKEY) {
+                rKeyPressed = true;
 
-            if (evt.keyCode == AKEY || evt.keyCode == LEFT_KEY) {
-                leftKeyPressed = true;
-
-            }
-
-            if (evt.keyCode == SKEY || evt.keyCode == TOP_KEY) {
-                downKeyPressed = true;
-            }
-
-            if (evt.keyCode == DKEY || evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = true;
-            }
-
-
+             }
         }
-
-
-
-
-
-
 
 
         function mouseAction(evt) {
@@ -992,15 +989,12 @@ powerUpChance = 0.23;
                 x: mouseX,
 
                 y: mouseY
-
-
             }
 
         }
 
     </script>
-    <h2> this is bradskines game</h2>
-
+    <h2> Click to start. Move mouse to play. Press r to restart</h2>
 
     <style>
         /*
@@ -1018,23 +1012,3 @@ powerUpChance = 0.23;
 </body>
 
 
-
-
-
->
-
-<!--
-<html>
-<head>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-    <meta name="Robots" content="NOINDEX " />
-</head>
-<body></body>
-<script type="text/javascript">
-    var gearPage = document.getElementById('GearPage');
-    if (null != gearPage) {
-        gearPage.parentNode.removeChild(gearPage);
-        document.title = "Error";
-    }
-</script></html>
--->
