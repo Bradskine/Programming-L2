@@ -37,7 +37,7 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 110;
+       var paddleWidth = 110;
         const PADDLE_HEIGHT = 20;
         var paddleXspeed = 10;
         var paddleYspeed = 5;
@@ -61,7 +61,7 @@
         var ballColor = 'red';
         var ballActive = false;
         var ballMaxSize = 80;
-
+        var difBrickHeight = 0;;
         //for arrow and wasd keys 
         const WKEY = 87;
         const AKEY = 65;
@@ -166,27 +166,30 @@
             drawImg(b0, 0, 0, canvas.width, canvas.height); // bg
 
             if (gameStart == false) {
-                paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
+                paddleXpos = canvas.width / 2 - paddleWidth / 2; //sets variables for when game first starts to make paddle in middle
                 paddleYpos = canvas.height * 0.83;
                 score = 0;
                 if (difficulty.toLowerCase() == 'easy') { //sets difficutly based on prompts
-                    lifes = 5;
+                    lifes =  2;
+                    paddleWidth = 130;
                     ballBaseSpeed = 3;
-                   ballYspeed = 3;
+                    difBrickHeight = -0.05;
                 } else if (difficulty.toLowerCase() == 'normal') {
-                    lifes = 3;
+                    lifes = 2;
                     ballBaseSpeed = 5;
-                     ballYspeed = 5;
+                    paddleWidth = 110;
+                    difBrickHeight = 0;
                 } else {
-                    lifes = 1;
+                    lifes = 2;
                     ballBaseSpeed = 7;
-                    ballBaseSpeed = 7;
+                    paddleWidth = 90;
+                    difBrickHeight = 0.05;
                 }
 
                 gameStart = true;
                 gameActive = true;
 
-
+tBrickHeight = 0.23 + difBrickHeight;
             }
 
 if(gameActive==true) {
@@ -243,13 +246,8 @@ if(gameActive==true) {
 
             if (level == 0) {
                 ballMaxCount = 1;
-                if(difficulty.toLowerCase() == 'easy') {
-                    powerUpChance  = 0.28;
-                }  else if (difficulty.toLowerCase() == 'hard') {
-                        powerUpChance = 0.15
-                }   else {
-                    powerUpChance = 0.23;
-                }
+               powerUpChance = 0.23;
+                
 
                 pushBall();
                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
@@ -309,8 +307,8 @@ if(gameActive==true) {
                     brickStrength = 2;
                     columnMaxCount = 3;
                     rowMaxCount = 10;
-                           tBrickHeight = 0.6;
-                       tBrickWidth = 0.7;
+                           tBrickHeight = 0.5;
+                       tBrickWidth = 0.7 + difBrickHeight;
                        brickLeftGap = canvas.width*0.15;
    powerUpChance -= 0.05;
                 } else if (level == 5) {
@@ -318,14 +316,14 @@ if(gameActive==true) {
                     columnMaxCount = 10;
                     brickStrength = 1;
 
-            tBrickHeight = 0.4;
+            tBrickHeight = 0.4 + difBrickHeight;
             tBrickWidth = 1;
                     
                 } else {
                      powerUpChance *= 0.98;
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
-   tBrickHeight = 0.6;
+   tBrickHeight = 0.6 + difBrickHeight;
             tBrickWidth = 1;
                 }
 
@@ -558,7 +556,7 @@ if(gameActive==true) {
             if (pUpYpos + pUpHeight >= paddleYpos && //ball collision with paddle
                 pUpYpos < paddleYpos - pUpHeight / 2 &&
                 pUpXpos + pUpWidth > paddleXpos &&
-                pUpXpos < paddleXpos + PADDLE_WIDTH &&
+                pUpXpos < paddleXpos + paddleWidth &&
                pUpActive == true) {
               
                 activatePup();
@@ -572,8 +570,8 @@ if(gameActive==true) {
 //activatePup();
 //
 //
-//            } else if (pUpXpos <= paddleXpos + PADDLE_WIDTH &&
-//                pUpXpos + pUpWidth > paddleXpos + PADDLE_WIDTH + pUpWidth / 3 &&
+//            } else if (pUpXpos <= paddleXpos + paddleWidth &&
+//                pUpXpos + pUpWidth > paddleXpos + paddleWidth + pUpWidth / 3 &&
 //                pUpYpos <= paddleYpos + PADDLE_HEIGHT &&
 //                pUpYpos + pUpWidth >= paddleYpos + PADDLE_HEIGHT / 2) {
 //
@@ -665,7 +663,7 @@ if(gameActive==true) {
 
             brickWidth = canvas.width * tBrickWidth / columnMaxCount - brickXgap;
 
-            brickHeight = canvas.height * tBrickHeight / rowMaxCount - brickYgap;
+            brickHeight = canvas.height * (tBrickHeight + difBrickHeight) / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
             if (level >= 5) {
@@ -800,11 +798,11 @@ if(gameActive==true) {
                 if (ball.ballYpos + ball.ballDiameter >= paddleYpos && //ball collision with paddle
                     ball.ballYpos < paddleYpos - ball.ballDiameter / 2 &&
                     ball.ballXpos + ball.ballDiameter > paddleXpos &&
-                    ball.ballXpos < paddleXpos + PADDLE_WIDTH) {
+                    ball.ballXpos < paddleXpos + paddleWidth) {
                     if (ball.ballYspeed > 0) {
 
                         ball.ballYspeed *= -1;
-                        ball.ballXspeed = ((ball.ballXpos + ball.ballDiameter / 2) - (paddleXpos + PADDLE_WIDTH / 2)) / 3.5;
+                        ball.ballXspeed = ((ball.ballXpos + ball.ballDiameter / 2) - (paddleXpos + paddleWidth / 2)) / 3.5;
 
                     }
 
@@ -817,8 +815,8 @@ if(gameActive==true) {
 
                     ball.ballXspeed *= -1;
 
-                } else if (ball.ballXpos <= paddleXpos + PADDLE_WIDTH &&
-                    ball.ballXpos + ball.ballDiameter > paddleXpos + PADDLE_WIDTH + ball.ballDiameter / 3 &&
+                } else if (ball.ballXpos <= paddleXpos + paddleWidth &&
+                    ball.ballXpos + ball.ballDiameter > paddleXpos + paddleWidth + ball.ballDiameter / 3 &&
                     ball.ballYpos <= paddleYpos + PADDLE_HEIGHT &&
                     ball.ballYpos + ball.ballDiameter >= paddleYpos + PADDLE_HEIGHT / 2 && //hiting right side of paddle
                     ball.ballXspeed < 0) {
@@ -891,7 +889,7 @@ if(gameActive==true) {
 
 
 
-              ballXpos = paddleXpos + PADDLE_WIDTH / 2 -30 / 2;
+              ballXpos = paddleXpos + paddleWidth / 2 -30 / 2;
                ballYpos = paddleYpos - 30;
             ballYspeed = ballBaseSpeed + (level * 2);
             ballXspeed = Math.random() * (18 - 7 + 7);
@@ -918,7 +916,7 @@ if(gameActive==true) {
                 //                ballCount = 0;
                 //might make a reset ball funciotn if i end up with more custimizations
 
-                ball.ballXpos = paddleXpos + PADDLE_WIDTH / 2 - ball.ballDiameter / 2;
+                ball.ballXpos = paddleXpos + paddleWidth / 2 - ball.ballDiameter / 2;
                 ball.ballYpos = paddleYpos - ball.ballDiameter;
 
 
@@ -937,9 +935,9 @@ if(gameActive==true) {
         }
 
         function drawPaddle() { //draws the paddle based on variables that can be changed and are set at start
-            //            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, paddleColor);
+            //            colorRect(paddleXpos, paddleYpos, paddleWidth, PADDLE_HEIGHT, paddleColor);
 
-            drawImg(pImage, paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT);
+            drawImg(pImage, paddleXpos, paddleYpos, paddleWidth, PADDLE_HEIGHT);
         }
 
         function paddleMove() {
@@ -947,13 +945,13 @@ if(gameActive==true) {
 
 
 
-            if (paddleXpos >= canvas.width * 0.02 && paddleXpos + PADDLE_WIDTH <= canvas.width * 0.98) {
+            if (paddleXpos >= canvas.width * 0.02 && paddleXpos + paddleWidth <= canvas.width * 0.98) {
 
 
                 if (isNaN(mouseX)) {
-                    paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
+                    paddleXpos = canvas.width / 2 - paddleWidth / 2;
                 } else {
-                    paddleXpos = mouseX - PADDLE_WIDTH / 2;
+                    paddleXpos = mouseX - paddleWidth / 2;
                 }
 
 
@@ -961,8 +959,8 @@ if(gameActive==true) {
                 if (paddleXpos < canvas.width * 0.02) {
                     paddleXpos = canvas.width * 0.02;
                 }
-                if (paddleXpos + PADDLE_WIDTH > canvas.width * 0.98) {
-                    paddleXpos = canvas.width * 0.98 - PADDLE_WIDTH;
+                if (paddleXpos + paddleWidth > canvas.width * 0.98) {
+                    paddleXpos = canvas.width * 0.98 - paddleWidth;
                 }
 
 
