@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 
 <body>
@@ -154,6 +156,10 @@
                         difficulty = prompt("What difficulty do you want to play at, Easy, Normal or Hard");
                     }
                 }
+
+        
+        
+        
         //        alert("Hi " + name + " Hope you enjoy my game move the paddle with mouse or keys");
 
         function mainloop() {
@@ -163,11 +169,11 @@
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
                 paddleYpos = canvas.height * 0.83;
                 score = 0;
-                if (difficulty == 'easy') { //sets difficutly based on prompts
+                if (difficulty.toLowerCase() == 'easy') { //sets difficutly based on prompts
                     lifes = 5;
                     ballBaseSpeed = 3;
                    ballYspeed = 3;
-                } else if (difficulty == 'normal') {
+                } else if (difficulty.toLowerCase() == 'normal') {
                     lifes = 3;
                     ballBaseSpeed = 5;
                      ballYspeed = 5;
@@ -237,7 +243,14 @@ if(gameActive==true) {
 
             if (level == 0) {
                 ballMaxCount = 1;
-powerUpChance = 0.23;
+                if(difficulty.toLowerCase() == 'easy') {
+                    powerUpChance  = 0.28;
+                }  else if (difficulty.toLowerCase() == 'hard') {
+                        powerUpChance = 0.15
+                }   else {
+                    powerUpChance = 0.23;
+                }
+
                 pushBall();
                 brickTopGap = 50; //updates levels by changing brick variables and ball variables
                 brickLeftGap = 0;
@@ -281,7 +294,7 @@ powerUpChance = 0.23;
                     rowMaxCount = 4;
                     columnMaxCount = 6;
                     brickStrength = 2;
-                       tBrickHeight = 0.5;
+                       tBrickHeight = 0.45;
             tBrickWidth = 1;
                 } else if (level == 3) {
 
@@ -290,7 +303,7 @@ powerUpChance = 0.23;
                     rowMaxCount = 5;
                     columnMaxCount = 7;
                     brickStrength = 3
- powerUpChance = 0.15;
+ powerUpChance -= 0.08
               
                 } else if (level == 4) {
                     brickStrength = 2;
@@ -299,7 +312,7 @@ powerUpChance = 0.23;
                            tBrickHeight = 0.6;
                        tBrickWidth = 0.7;
                        brickLeftGap = canvas.width*0.15;
-   powerUpChance = 0.1;
+   powerUpChance -= 0.05;
                 } else if (level == 5) {
                     rowMaxCount = 3;
                     columnMaxCount = 10;
@@ -309,7 +322,7 @@ powerUpChance = 0.23;
             tBrickWidth = 1;
                     
                 } else {
-                     powerUpChance = 0.08;
+                     powerUpChance *= 0.98;
                     rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
                     columnMaxCount = level + 4;
    tBrickHeight = 0.6;
@@ -734,11 +747,12 @@ powerUpChance = 0.23;
         
                  if(rKeyPressed == true) {
                     
-                         gameStart = false;
-                        level = 0;
-                     bricks = [];
+              gameStart = false;
+               level = 0;
+               bricks = [];
                brickCount = 0;
-                 
+               pUpActive = false;
+              powerUpCount = 0;
                      }
                  }
 
@@ -1010,5 +1024,3 @@ powerUpChance = 0.23;
 
     </style>
 </body>
-
-
