@@ -1,4 +1,3 @@
-
 <!doctype html>
 
 <body>
@@ -89,7 +88,8 @@
         var pImage = new Image();
         var gameOverScreen = new Image();
         var powerUpImg = new Image();
-
+        var won = new Image();
+        won.src = 'Img/gameWon.png';
         ball2.src = 'Img/ball.png';
         brickImg.src = 'Img/brick.png';
         b0.src = 'Img/b0.png';
@@ -141,6 +141,7 @@
         var level = 0;
         var gameActive = false;
         var difficulty = 'normal';
+        var gameWon = false;
 
         //        var name = prompt("What's your name") // ask for the name
         //        while (name.length == 0 || name == 'null') { // if the names lenght is 0 or the player clicks cancel it will keep asking until they type a valid name.
@@ -165,7 +166,8 @@
 
         function mainloop() {
             drawImg(b0, 0, 0, canvas.width, canvas.height); // bg
-
+            gameOver();
+           gameWinCheck();
             if (gameStart == false) {
                 paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2; //sets variables for when game first starts to make paddle in middle
                 paddleYpos = canvas.height * 0.83;
@@ -210,7 +212,7 @@ if(gameActive==true) {
             drawBricks();
             updateLevel();
            
-     gameOver();
+        
 
 
 
@@ -219,11 +221,23 @@ if(gameActive==true) {
             }
 
 }
-             gameOver();
+       
             checkRestart();
+            
+            
+            
+            if(gameWon == true) {
+                 drawImg(won,0,0,canvas.width,canvas.height);
+            }
         }
 
-
+function gameWinCheck() {
+    
+    if(level == 11) {
+         gameWon = true;
+    }
+   
+}
 
 
 
@@ -243,6 +257,7 @@ if(gameActive==true) {
 
 
             if (level == 0) {
+                 tBrickHeight = 0.24;
                 ballMaxCount = 1;
                 if(difficulty.toLowerCase() == 'easy') {
                     powerUpChance  = 0.28;
@@ -287,7 +302,7 @@ if(gameActive==true) {
                     columnMaxCountCount = 5;
 
                     brickStrength = 1
-
+       tBrickHeight = 0.24;
                 } else if (level == 2) { // changes variables based on what level it is
                     balls.forEach(function(ball, index, array) {
 
@@ -295,7 +310,7 @@ if(gameActive==true) {
                     rowMaxCount = 4;
                     columnMaxCount = 6;
                     brickStrength = 2;
-                       tBrickHeight += 0.1;
+                            tBrickHeight = 0.28;
                 
             tBrickWidth = 1;
                 } else if (level == 3) {
@@ -306,40 +321,54 @@ if(gameActive==true) {
                     columnMaxCount = 7;
                     brickStrength = 3
  powerUpChance -= 0.08
-              
+                     tBrickHeight = 0.28;
                 } else if (level == 4) {
                     brickStrength = 2;
-                    columnMaxCount = 3;
+                    columnMaxCount = 2;
                     rowMaxCount = 10;
                            tBrickHeight = 0.6;
-                       tBrickWidth  += 0.25;
+                       tBrickWidth = 0.55;
                        brickLeftGap = canvas.width*0.15;
    powerUpChance -= 0.05;
                 } else if (level == 5) {
                     rowMaxCount = 3;
                     columnMaxCount = 10;
                     brickStrength = 1;
-      
+            brickLeftGap =0;
             tBrickHeight = 0.3;
             tBrickWidth = 1;
                     
-                } if(level==6) {
-                    brickTopGap*=4;
-                            rowMaxCount = 2;
+                } else if(level==6) {
+                    brickTopGap =200;
+                      rowMaxCount = 2;
                     columnMaxCount = 10;
                     brickStrength = 1;
-                tBrickHeight = 0.2;
-            tBrickWidth = 1;
+                    tBrickHeight = 0.2;
+                   tBrickWidth = 1;
                     
-                    
-                    
-                }  else {
+                }    else if(level==7){
+                        tBrickHeight = 0.2;
+                       tBrickWidth = 1;
+                    rowMaxCount = 4;
+                    columnMaxCount  = 6;
                     brickTopGap = 50;
-                     powerUpChance *= 0.98;
-                    rowMaxCount = Math.floor(1.4 * level + 1); // to make it so in very high leves brick count will get larger but bricks wont get to skinny
-                    columnMaxCount = level + 4;
-   tBrickHeight = 0.6;
-            tBrickWidth = 1;
+                    
+                }  else if (level==8) {
+                    tBrickWidth = 1;
+                    tBrickHeight = 0.45;
+                    rowMaxCount = 4;
+                    columnMaxCount = 4;
+                }   else if(level==9) {
+                    
+                    
+                   brickTopGap = 10;
+                    rowMaxCount = 2;
+                    columnMaxCount = 5;
+                    tBrickHeight = 0.5;
+                    tBrickWidth = 1;
+                    
+                    
+                                    // herhehrehrherhehrehrehrherherhehrherhehreherherehereherereherehrherherhhererehrehrehrherhehrherer   jojonononojonono
                 }
 
                 newLevel();
@@ -354,6 +383,12 @@ if(gameActive==true) {
 
         function rand() {
             brickStrength = Math.floor(Math.random() * (3 - 1) + 1);
+        }
+        
+        
+        
+        function rand2() {
+            brickStrength = Math.floor(Math.random() *(4-1) + 1);
         }
 
         function pushBall() {
@@ -380,9 +415,9 @@ if(gameActive==true) {
 
             balls.forEach(function(balls, index, array) {
                 if (balls.ballYspeed > 0) {
-                    balls.ballYspeed = ballBaseSpeed + (level * 2);
+                    balls.ballYspeed = ballBaseSpeed + (level * 1.5);
                 } else {
-                    balls.ballYspeed = -(ballBaseSpeed + (level * 2));
+                    balls.ballYspeed = -(ballBaseSpeed + (1.5*level));
                 }
 
 
@@ -622,6 +657,7 @@ if(gameActive==true) {
                           
                           } else if (Math.random()<0.01) {
                               alert('lucky you here are 20 lives');
+                              gameWon == true;
                           } else if(ball.ballDiameter == 30) {
                                     ball.ballDiameter += 20;
                                     balltimer = 300;
@@ -679,9 +715,97 @@ if(gameActive==true) {
             brickHeight = canvas.height * tBrickHeight / rowMaxCount - brickYgap;
 
             brickStrength = brickStrength; //decides how many times brick needs to be hit to break
-            if (level >= 5) {
+            if (level == 5||level==6) {
                 rand();
+            } 
+            if(level>6) {
+                rand2();
             }
+            
+            if(level==7) {
+                if(rowCount<2) {
+                    brickHeight =(canvas.height * tBrickHeight / rowMaxCount - brickYgap)*2;
+                   
+                }  else {
+                     brickHeight =canvas.height * tBrickHeight / rowMaxCount - brickYgap;
+                    brickYpos += 150;
+                }
+            }
+            if(level==8) {
+                if(columnCount == 3 || columnCount == 0) {
+                    brickWidth = (canvas.width * tBrickWidth / columnMaxCount - brickXgap) /3;
+                    brickXpos += (canvas.width * tBrickWidth / columnMaxCount - brickXgap)/3;
+                }  else{
+                    brickWidth = canvas.width * tBrickWidth / columnMaxCount - brickXgap;
+                   
+                }
+            }
+            
+            if(level == 9) {
+                
+               if(brickCount ==0) {
+                   brickXpos = 10;
+                   brickYpos = 5;
+                   brickHeight = canvas.height*0.24;
+                   brickWidth = canvas.width / 4.2;
+               }
+                
+                if(brickCount ==1) {
+                   brickXpos = canvas.width/2.5;
+                   brickYpos = 5;
+                   brickHeight = canvas.height*0.23;
+                   brickWidth = canvas.width / 7;
+               }if(brickCount ==2) {
+                   brickXpos = canvas.width*0.63;
+                   brickYpos = 5;
+                   brickHeight = 40;
+                   brickWidth = 40;
+               }if(brickCount ==4) {
+                   brickXpos = 10;
+                   brickYpos = canvas.height/2.3;
+                   brickHeight = canvas.height*0.24;
+                   brickWidth = canvas.width / 4.2;
+               }if(brickCount ==3) {
+                   brickXpos = canvas.width *0.8;
+                   brickYpos = 20;
+                   brickHeight = canvas.height*0.24;
+                   brickWidth = canvas.width / 9;
+               }if(brickCount ==5) {
+                   brickXpos = canvas.width *0.3;
+                   brickYpos = canvas.height*0.3;
+                   brickHeight = 50;
+                   brickWidth = 50;
+               }if(brickCount ==6) {
+                   brickXpos = canvas.width *0.38;
+                   brickYpos = canvas.height*0.37;
+                   brickHeight = 50;
+                   brickWidth = 50;
+               }if(brickCount ==7) {
+                   brickXpos = canvas.width /2;
+                   brickYpos = canvas.height*0.23;
+                   brickHeight = canvas.height*0.24;
+                   brickWidth = canvas.width / 3.2;
+               }if(brickCount ==8) {
+                  brickXpos = canvas.width *0.4;
+                   brickYpos = canvas.height*0.23 + canvas.height*0.24;
+                   brickHeight = canvas.height*0.12;
+                   brickWidth = canvas.width / 4.2;
+               }if(brickCount ==9) {
+                     brickXpos = canvas.width *0.75;
+                   brickYpos = canvas.height*0.23 + canvas.height*0.24;
+                   brickHeight = canvas.height*0.12;
+                   brickWidth = canvas.width / 4.2;
+               }if(brickCount ==0) {
+                   brickXpos = 10;
+                   brickYpos = 5;
+                   brickHeight = canvas.height*0.24;
+                   brickWidth = canvas.width / 4.2;
+               }
+                
+                // herhehrehrherhehrehrehrherherhehrherhehreherherehereherereherehrherherhhererehrehrehrherhehrherer   jojonononojonono
+                
+            }
+            
             if (brickStrength == 1) {
                 brickImg.src = 'Img/brick.png';
             } else if (brickStrength == 2) {
@@ -752,11 +876,15 @@ if(gameActive==true) {
 
 
         function gameOver() {
-            if (lifes < 1) {
+            console.log('hi');
+            if (lifes < 0) {
                 gameActive =false;
                 drawImg(gameOverScreen,0,0,canvas.width,canvas.height);
 
-            }
+            }  
+           
+            
+
         }
  
          if(score > highScore) {
@@ -767,16 +895,14 @@ if(gameActive==true) {
                  if(rKeyPressed == true) {
                     
               gameStart = false;
-               level = 0;
+               level = 9;
                bricks = [];
                brickCount = 0;
                pUpActive = false;
               powerUpCount = 0;
-                     }
-                 }
-
-         
-        
+       
+         }
+         }
         
         
         
@@ -923,8 +1049,8 @@ if(gameActive==true) {
 
               ballXpos = paddleXpos + PADDLE_WIDTH / 2 -30 / 2;
                ballYpos = paddleYpos - 30;
-            ballYspeed = ballBaseSpeed + (level * 2);
-            ballXspeed = Math.random() * (18 - 7 + 7)
+            ballYspeed = ballBaseSpeed + (level * 1.5);
+            ballXspeed = Math.random() * (level*1.5);
             ballDiameter = 30;
 
 
